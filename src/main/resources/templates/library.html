@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+  a {
+    text-decoration: none;
+    color: black;
+  }
+
+  .active {
+    background-color: aqua;
+    font-weight: bold;
+    /*pointer-events: none;*/
+  }
+</style>
+
+<body>
+  <table border="1">
+    <tr>
+      <td>번호</td>
+      <td>도서관명</td>
+      <td>전화번호</td>
+      <td>시도</td>
+      <td>주소</td>
+      <td>위도</td>
+      <td>경도</td>
+    </tr>
+    <tr th:each="lib : ${list}">
+      <td th:text="${lib.id}"></td>
+      <td th:text="${lib.name}"></td>
+      <td th:text="${lib.tel}"></td>
+      <td th:text="${lib.sido}"></td>
+      <td th:text="${lib.roaddress}"></td>
+      <td th:text="${lib.lat}"></td>
+      <td th:text="${lib.lng}"></td>
+    </tr>
+  </table>
+
+</body>
+
+</html>
