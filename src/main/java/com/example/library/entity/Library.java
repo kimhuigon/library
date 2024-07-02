@@ -9,6 +9,7 @@ import lombok.Data;
 public class Library {
   @Id
   Integer id;
+  String userId;
   String name;
   String sido;
   String roaddress;

@@ -1,0 +1,12 @@
+<div>
+  <h3 th:if="${session.user_info == null}">
+    <a th:href="@{/login}" class="link-dark">
+      로그인 후 사용해주세요.
+    </a>
+  </h3>
+  <h3 th:unless="${session.user_info == null}">
+    <a th:href="@{/logout}" class="link-dark">
+      [[ ${session.user_info.name} + '님 반갑습니다.' ]]
+    </a>
+  </h3>
+</div>
