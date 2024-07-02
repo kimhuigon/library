@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Posts List</title>
+    <style>
+        .active {
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        .pagination a {
+            margin: 0 5px;
+            text-decoration: none;
+            color: black;
+        }
+        .pagination a.active {
+            pointer-events: none; /* 클릭 불가능하게 설정 */
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <h1>Posts List</h1>
+    <a href="/posts/new">Create New Post</a>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="post : ${postPage.content}">
+                <td th:text="${post.id}"></td>
+                <td th:text="${post.title}"></td>
+                <td th:text="${post.author}"></td>
+                <td>
+                    <a th:href="@{/posts/{id}(id=${post.id})}">View</a>
+                    <a th:href="@{/posts/edit/{id}(id=${post.id})}">Edit</a>
+                    <a th:href="@{/posts/delete/{id}(id=${post.id})}">Delete</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <span th:text="'Page ' + ${postPage.number + 1} + ' of ' + ${postPage.totalPages}"></span>
+    </div>
+
+    <div class="pagination">
+        <a th:if="${postPage.hasPrevious()}" th:href="@{/posts(page=${postPage.number - 1}, size=${postPage.size})}">Previous</a>
+        <span th:each="pageNum : ${pageNumbers}">
+            <a th:if="${pageNum - 1 != postPage.number}" th:href="@{/posts(page=${pageNum - 1}, size=${postPage.size})}" th:text="${pageNum}"></a>
+            <a th:if="${pageNum - 1 == postPage.number}" th:class="active" th:text="${pageNum}"></a>
+        </span>
+        <a th:if="${postPage.hasNext()}" th:href="@{/posts(page=${postPage.number + 1}, size=${postPage.size})}">Next</a>
+    </div>
+</body>
+</html>
