@@ -54,7 +54,7 @@ public class UserController {
   }
 
   @PostMapping("/signup")
-  public String signupPost(@ModelAttribute UserForm userForm, BindingResult result, Model model) {
+  public String signupPost(@ModelAttribute @Valid UserForm userForm, BindingResult result, Model model) {
     if(result.hasErrors()) {
       result.getFieldErrors().forEach(error -> {
         model.addAttribute(
