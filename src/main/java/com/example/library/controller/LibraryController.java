@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Slf4j
 public class LibraryController {
   @Autowired LibraryRepository libraryRepository;
-  @GetMapping("library")
+  @GetMapping("/library")
   public String library(Model model) {
     List<Library> list = libraryRepository.findAll();
 
