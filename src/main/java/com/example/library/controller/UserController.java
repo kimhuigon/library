@@ -57,8 +57,7 @@ public class UserController {
   public String signupPost(@ModelAttribute @Valid UserForm userForm, BindingResult result, Model model) {
     if(result.hasErrors()) {
       result.getFieldErrors().forEach(error -> {
-        model.addAttribute(
-          error.getField() + "Error", error.getDefaultMessage());
+        model.addAttribute(error.getField() + "Error", error.getDefaultMessage());
       });
       return "signup";
     }
