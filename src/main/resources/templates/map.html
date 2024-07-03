@@ -10,7 +10,7 @@
   <!-- Kakao Maps API -->
   <script type="text/javascript"
     src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6dfaf6fb0d9d9293c6bc9220328e7540&libraries=services"></script>
-
+  
   <style>
     /* 맵 컨테이너 스타일 */
     #map-container {
@@ -22,23 +22,18 @@
       border: 1px solid #ddd;
       max-height: 400px;
       overflow-y: auto;
-      margin-top: 10px;
-      /* 검색창 및 버튼 아래에 여백 추가 */
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      margin-top: 10px; /* 검색창 및 버튼 아래에 여백 추가 */
     }
 
     /* 검색 결과 항목 스타일 */
     .resultItem {
-      padding: 10px;
+      padding: 5px;
       cursor: pointer;
-      border-bottom: 1px solid #ddd;
     }
 
     /* 검색 결과 항목 호버 스타일 */
     .resultItem:hover {
-      background-color: #f1f1f1;
+      background-color: #eee;
     }
 
     /* 인포윈도우 닫기 버튼 스타일 */
@@ -74,28 +69,35 @@
       margin-bottom: 3px;
     }
 
-    /* 현재 위치 버튼 스타일 */
-    #currentLocationButton {
+    /* 커스텀 버튼 스타일 */
+    .btn-custom {
       position: absolute;
       bottom: 10px;
       right: 10px;
       z-index: 1000;
-      padding: 0;
+      padding: 5px 10px; /* 크기를 줄임 */
+      background-color: #007bff;
+      color: white;
       border: none;
-      background: none;
+      border-radius: 15px; /* 둥근 모서리 크기 조정 */
+      font-size: 14px; /* 폰트 크기 줄임 */
       cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, transform 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
-    /* 현재 위치 버튼 이미지 스타일 */
-    #currentLocationButton img {
-      width: 24px;
-      height: 35px;
-      display: block;
+    /* 커스텀 버튼 호버 스타일 */
+    .btn-custom:hover {
+      background-color: #0056b3;
+      transform: translateY(-2px);
     }
 
-    /* 현재 위치 버튼 이미지 호버 스타일 */
-    #currentLocationButton:hover img {
-      transform: scale(1.1);
+    /* 커스텀 버튼 클릭 스타일 */
+    .btn-custom:active {
+      background-color: #004494;
+      transform: translateY(0);
     }
 
     /* 하단 텍스트 스타일 */
@@ -112,6 +114,7 @@
       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     }
   </style>
+
 </head>
 
 <body>
@@ -128,20 +131,19 @@
         <li class="nav-item">
           <a class="nav-link" href="/map">지도</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/contact">Contact</a>
-        </li>
       </ul>
     </div>
   </nav>
 
+  <!-- 메인 컨테이너 -->
   <div class="container" id="map-container">
     <div class="row">
       <!-- 왼쪽 열 -->
       <div class="col-md-8">
         <div id="map" style="width:100%;height:400px; position: relative;">
-          <button onclick="showCurrentLocation()" id="currentLocationButton" class="btn btn-link"
-            style="position: absolute; bottom: 10px; right: 10px; z-index: 1000; color: black;">현위치</button>
+          <button onclick="showCurrentLocation()" id="currentLocationButton" class="btn-custom">
+            R
+          </button>
         </div>
         <h1 id="libraryName" class="styled-text">도서관 찾기</h1>
       </div>
@@ -149,8 +151,7 @@
       <div class="col-md-4">
         <div class="row mb-3">
           <div class="col-9">
-            <input type="text" id="searchInput" class="form-control" placeholder="도서관 이름 또는 시도로 검색"
-              onkeypress="handleKeyPress(event)">
+            <input type="text" id="searchInput" class="form-control" placeholder="도서관 이름 또는 시도로 검색" onkeypress="handleKeyPress(event)">
           </div>
           <div class="col-3">
             <button onclick="searchLibraries()" class="btn btn-primary btn-block">검색</button>
@@ -161,6 +162,7 @@
     </div>
   </div>
 
+  <!-- 스크립트 섹션 -->
   <script>
     // 전역 변수 선언
     var map;
