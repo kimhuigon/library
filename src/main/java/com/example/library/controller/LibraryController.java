@@ -34,24 +34,4 @@ public class LibraryController {
     public String index() {
         return "index";
     }
-
-    @GetMapping("/api/libraries")
-    @ResponseBody
-    public List<Library> getLibraries() {
-        return libraryRepository.findAll();
-    }
-
-    @GetMapping("/api/libraries/search")
-    @ResponseBody
-    public List<Library> searchLibraries(@RequestParam String query) {
-        return libraryRepository.findByNameContainingIgnoreCase(query);
-    }
-
-    @GetMapping("/api/libraries/nearby")
-    @ResponseBody
-    public List<Library> getNearbyLibraries(@RequestParam double lat, @RequestParam double lng, @RequestParam(defaultValue = "5") double distance) {
-        return libraryRepository.findLibrariesWithinDistance(lat, lng, distance);
-    }
-
-
 }
