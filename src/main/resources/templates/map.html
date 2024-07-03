@@ -7,32 +7,36 @@
   <title>Library Map</title>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<<<<<<< HEAD
- 
-=======
   <!-- Kakao Maps API -->
   <script type="text/javascript"
     src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6dfaf6fb0d9d9293c6bc9220328e7540&libraries=services"></script>
->>>>>>> 801ed092cff794f2d3c8fca042bbcb82ea099581
+  
   <style>
-    /* 검색 결과 스타일 */
-    #searchResult {
-      margin-top: 10px;
-      border: 1px solid #ddd;
-      max-height: 200px;
-      overflow-y: auto;
+    /* 맵 컨테이너 스타일 */
+    #map-container {
+      margin-top: 20px;
     }
 
+    /* 검색 결과 컨테이너 스타일 */
+    #searchResult {
+      border: 1px solid #ddd;
+      max-height: 400px;
+      overflow-y: auto;
+      margin-top: 10px; /* 검색창 및 버튼 아래에 여백 추가 */
+    }
+
+    /* 검색 결과 항목 스타일 */
     .resultItem {
       padding: 5px;
       cursor: pointer;
     }
 
+    /* 검색 결과 항목 호버 스타일 */
     .resultItem:hover {
       background-color: #eee;
     }
 
-    /* 인포윈도우 스타일 */
+    /* 인포윈도우 닫기 버튼 스타일 */
     .infowindow-close {
       position: absolute;
       top: 5px;
@@ -43,6 +47,7 @@
       font-size: 18px;
     }
 
+    /* 인포윈도우 콘텐츠 스타일 */
     .infowindow-content {
       padding: 10px;
       position: relative;
@@ -52,60 +57,64 @@
       word-wrap: break-word;
     }
 
+    /* 인포윈도우 도서관 이름 스타일 */
     .infowindow-content .library-name {
       font-weight: bold;
       font-size: 14px;
       margin-bottom: 5px;
     }
 
+    /* 인포윈도우 도서관 정보 스타일 */
     .infowindow-content .library-info {
       margin-bottom: 3px;
     }
 
-    /* 지도 컨테이너 스타일 */
-    #map-container {
-      margin-top: 20px;
-    }
-
-    /* 현재 위치 버튼 스타일 */
-    #currentLocationButton {
+    /* 커스텀 버튼 스타일 */
+    .btn-custom {
       position: absolute;
       bottom: 10px;
       right: 10px;
       z-index: 1000;
-      padding: 0;
+      padding: 5px 10px; /* 크기를 줄임 */
+      background-color: #007bff;
+      color: white;
       border: none;
-      background: none;
+      border-radius: 15px; /* 둥근 모서리 크기 조정 */
+      font-size: 14px; /* 폰트 크기 줄임 */
       cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s, transform 0.3s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
-    #currentLocationButton img {
-      width: 24px;
-      height: 35px;
-      display: block;
+    /* 커스텀 버튼 호버 스타일 */
+    .btn-custom:hover {
+      background-color: #0056b3;
+      transform: translateY(-2px);
     }
 
-    #currentLocationButton:hover img {
-      transform: scale(1.1);
+    /* 커스텀 버튼 클릭 스타일 */
+    .btn-custom:active {
+      background-color: #004494;
+      transform: translateY(0);
     }
 
-    /* 팝업 창 스타일 */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.4);
-    }
-
-    .modal-dialog {
-      margin: 15% auto;
+    /* 하단 텍스트 스타일 */
+    .styled-text {
+      text-align: center;
+      font-family: 'Arial', sans-serif;
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     }
   </style>
+
 </head>
 
 <body>
@@ -122,69 +131,38 @@
         <li class="nav-item">
           <a class="nav-link" href="/map">지도</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/contact">Contact</a>
-        </li>
       </ul>
     </div>
   </nav>
 
+  <!-- 메인 컨테이너 -->
   <div class="container" id="map-container">
-    <h1 id="libraryName" style="text-align: center;">도서관 찾기</h1>
-    <div class="row mb-3">
-      <div class="col">
-        <input type="text" id="searchInput" class="form-control" placeholder="도서관 이름 또는 시도로 검색" onkeypress="handleKeyPress(event)">
+    <div class="row">
+      <!-- 왼쪽 열 -->
+      <div class="col-md-8">
+        <div id="map" style="width:100%;height:400px; position: relative;">
+          <button onclick="showCurrentLocation()" id="currentLocationButton" class="btn-custom">
+            R
+          </button>
+        </div>
+        <h1 id="libraryName" class="styled-text">도서관 찾기</h1>
       </div>
-      <div class="col-auto">
-        <button onclick="searchLibraries()" class="btn btn-primary">검색</button>
-      </div>
-      <div class="col-auto">
-        <button onclick="findDirections()" class="btn btn-primary">길찾기</button>
-      </div>
-    </div>
-    <div id="map" style="width:100%;height:400px; position: relative;">
-      <button onclick="showCurrentLocation()" id="currentLocationButton" class="btn btn-link" style="position: absolute; bottom: 10px; right: 10px; z-index: 1000; color: black;">현위치</button>
-    </div>
-    <div id="searchResult"></div>
-
-    
-    <!-- 길찾기 -->
-    <div id="directionsPopup" class="modal" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">길찾기</h5>
-            <button type="button" class="close" onclick="closeDirectionsPopup()" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+      <!-- 오른쪽 열 -->
+      <div class="col-md-4">
+        <div class="row mb-3">
+          <div class="col-9">
+            <input type="text" id="searchInput" class="form-control" placeholder="도서관 이름 또는 시도로 검색" onkeypress="handleKeyPress(event)">
           </div>
-          <div class="modal-body">
-            <div class="form-group">
-              <label for="startLocation">출발지</label>
-              <input type="text" id="startLocation" class="form-control" placeholder="출발지 주소">
-            </div>
-            <div class="form-group">
-              <label for="endLocation">목적지</label>
-              <input type="text" id="endLocation" class="form-control" placeholder="목적지 주소">
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary" onclick="findDirections()">길찾기</button>
-            <button type="button" class="btn btn-secondary" onclick="closeDirectionsPopup()">닫기</button>
+          <div class="col-3">
+            <button onclick="searchLibraries()" class="btn btn-primary btn-block">검색</button>
           </div>
         </div>
+        <div id="searchResult" style="border: 1px solid #ddd; max-height: 400px; overflow-y: auto;"></div>
       </div>
     </div>
-
-    <div id="map" style="width:100%;height:400px; position: relative;">
-      <button onclick="showCurrentLocation()" id="currentLocationButton">
-        <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png" alt="현재 위치">
-      </button>
-    </div>
-    <div id="searchResult"></div>
   </div>
- <!-- Kakao Maps API -->
-  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6dfaf6fb0d9d9293c6bc9220328e7540&libraries=services"></script>
+
+  <!-- 스크립트 섹션 -->
   <script>
     // 전역 변수 선언
     var map;
@@ -256,59 +234,63 @@
       }
     }
 
-// 현재 위치 표시 함수
-function showCurrentLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(function(position) {
-      var lat = position.coords.latitude;
-      var lng = position.coords.longitude;
-      var locPosition = new kakao.maps.LatLng(lat, lng);
+    // 현재 위치 표시 함수
+    function showCurrentLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          var lat = position.coords.latitude;
+          var lng = position.coords.longitude;
+          var locPosition = new kakao.maps.LatLng(lat, lng);
 
-      // 좌표를 주소로 변환
-      geocoder.coord2Address(lng, lat, function(result, status) {
-        if (status === kakao.maps.services.Status.OK) {
-          var address = result[0].address.address_name;
-          displayLocation(locPosition, "현재 위치", null, address);
-        } else {
-          displayLocation(locPosition, "현재 위치");
-        }
+          // 좌표를 주소로 변환
+          geocoder.coord2Address(lng, lat, function (result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+              var address = result[0].address.address_name;
+              displayLocation(locPosition, "현재 위치", null, address);
+            } else {
+              displayLocation(locPosition, "현재 위치");
+            }
+          });
+
+          if (lat && lng) {
+            showNearbyLibraries(lat, lng); // 여기서 유효한 lat, lng를 제공
+          } else {
+            console.error("Invalid latitude or longitude");
+          }
+        }, function (error) {
+          console.error(error);
+          alert("현재 위치 정보를 가져올 수 없습니다.");
+        });
+      } else {
+        alert("이 브라우저에서는 Geolocation이 지원되지 않습니다.");
+      }
+    }
+
+    // 위치 표시 함수 (현재 위치 또는 도서관 위치)
+    function displayLocation(position, title, library = null, address = null) {
+      if (currentLocationMarker) {
+        currentLocationMarker.setMap(null);
+      }
+      if (currentInfowindow) {
+        currentInfowindow.close();
+      }
+
+      currentLocationMarker = new kakao.maps.Marker({
+        map: map,
+        position: position,
+        image: library ? libraryMarkerImage : currentMarkerImage
       });
 
-      showNearbyLibraries(lat, lng);
-    }, function(error) {
-      console.error(error);
-      alert("현재 위치 정보를 가져올 수 없습니다.");
-    });
-  } else {
-    alert("이 브라우저에서는 Geolocation이 지원되지 않습니다.");
-  }
-}
+      var libraryNameElement = document.getElementById('libraryName');
+      if (library) {
+        libraryNameElement.textContent = `${library.name}: ${library.roaddress ? library.roaddress : ''}`;
+      } else if (address) {
+        libraryNameElement.textContent = address;
+      } else {
+        libraryNameElement.textContent = title;
+      }
 
-// 위치 표시 함수 (현재 위치 또는 도서관 위치)
-function displayLocation(position, title, library = null, address = null) {
-  if (currentLocationMarker) {
-    currentLocationMarker.setMap(null);
-  }
-  if (currentInfowindow) {
-    currentInfowindow.close();
-  }
-
-  currentLocationMarker = new kakao.maps.Marker({
-    map: map,
-    position: position,
-    image: library ? libraryMarkerImage : currentMarkerImage
-  });
-
-  var libraryNameElement = document.getElementById('libraryName');
-  if (library) {
-    libraryNameElement.textContent = `${library.name}: ${library.roaddress ? library.roaddress : ''}`;
-  } else if (address) {
-    libraryNameElement.textContent = address;
-  } else {
-    libraryNameElement.textContent = title;
-  }
-
-  var infowindowContent = library ? createLibraryInfowindowContent(library) : `
+      var infowindowContent = library ? createLibraryInfowindowContent(library) : `
     <div class="infowindow-content" style="text-align:center;">
       <button class="infowindow-close" onclick="closeInfowindow()">&times;</button>
       <div>${title}</div>
@@ -316,146 +298,152 @@ function displayLocation(position, title, library = null, address = null) {
     </div>
   `;
 
-  currentInfowindow = new kakao.maps.InfoWindow({
-    content: infowindowContent,
-    zIndex: 1
-  });
+      currentInfowindow = new kakao.maps.InfoWindow({
+        content: infowindowContent,
+        zIndex: 1
+      });
 
-  kakao.maps.event.addListener(currentLocationMarker, 'click', function() {
-    currentInfowindow.open(map, currentLocationMarker);
-  });
+      kakao.maps.event.addListener(currentLocationMarker, 'click', function () {
+        currentInfowindow.open(map, currentLocationMarker);
+      });
 
-  currentInfowindow.open(map, currentLocationMarker);
-  map.setCenter(position);
-}
+      currentInfowindow.open(map, currentLocationMarker);
+      map.setCenter(position);
+    }
 
+    // 도서관 검색 함수
+    function searchLibraries() {
+      var query = document.getElementById('searchInput').value;
 
-// 도서관 검색 함수
-function searchLibraries() {
-  var query = document.getElementById('searchInput').value;
+      fetch(`/api/libraries/search?query=${encodeURIComponent(query)}`)
+        .then(response => response.json())
+        .then(data => {
+          // 데이터가 배열인지 확인
+          const libraries = Array.isArray(data) ? data : [];
+          displaySearchResults(libraries);
 
-  fetch(`/api/libraries/search?query=${encodeURIComponent(query)}`)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
-      }
-      return response.json();
-    })
-    .then(data => {
-      displaySearchResults(data);
-    })
-    .catch(error => console.error('Error:', error));
-}
+          if (libraries.length > 0) {
+            // 유효한 도서관을 찾을 때까지 반복
+            for (const library of libraries) {
+              var lat = parseFloat(library.lat);
+              var lng = parseFloat(library.lng);
 
+              // 디버깅 메시지
+              console.log(`Library: ${library.name}, Lat: ${lat}, Lng: ${lng}`);
 
-// 주변 도서관 표시 함수
-function showNearbyLibraries(lat, lng) {
-  fetch(`/api/libraries/nearby?lat=${lat}&lng=${lng}&distance=5`)
-    .then(response => response.json())
-    .then(data => {
-      showLibrariesOnMap(data);
-    })
-    .catch(error => console.error('Error:', error));
-}
+              // 유효한 위도와 경도 값인지 확인
+              if (!isNaN(lat) && !isNaN(lng)) {
+                showNearbyLibraries(lat, lng); // 유효한 도서관의 위치를 기준으로 주변 도서관 검색
+                break;
+              } else {
+                console.error(`Invalid latitude or longitude for the library: ${library.name}`);
+              }
+            }
+          }
+        })
+        .catch(error => console.error('Error:', error));
+    }
 
+    // 주변 도서관 표시 함수
+    function showNearbyLibraries(lat, lng) {
+      fetch(`/api/libraries/nearby?lat=${lat}&lng=${lng}&distance=5`)
+        .then(response => response.json())
+        .then(data => {
+          // 데이터가 배열인지 확인
+          const libraries = Array.isArray(data) ? data : [];
+          showLibrariesOnMap(libraries);
+        })
+        .catch(error => console.error('Error:', error));
+    }
 
-// 검색 결과 표시 함수
-function displaySearchResults(libraries) {
-  var searchResultDiv = document.getElementById('searchResult');
-  searchResultDiv.innerHTML = '';
-  libraries.forEach(library => {
-    var resultItem = document.createElement('div');
-    resultItem.className = 'resultItem';
-    resultItem.innerText = `${library.name} (${library.sido})`;
-    resultItem.onclick = function() {
-      selectedLibrary = library; // 선택된 도서관 정보 저장
-      var position = new kakao.maps.LatLng(library.lat, library.lng);
-      displayLocation(position, library.name, library);
-      showNearbyLibraries(library.lat, library.lng); // 클릭 시 해당 위치를 기준으로 주변 도서관 검색
-    };
-    searchResultDiv.appendChild(resultItem);
-  });
-}
+    // 검색 결과 표시 함수
+    function displaySearchResults(libraries) {
+      var searchResultDiv = document.getElementById('searchResult');
+      searchResultDiv.innerHTML = '';
+      libraries.forEach(library => {
+        var resultItem = document.createElement('div');
+        resultItem.className = 'resultItem';
+        resultItem.innerText = `${library.name} (${library.sido})`;
 
+        // 위도와 경도를 숫자로 변환
+        var lat = parseFloat(library.lat);
+        var lng = parseFloat(library.lng);
 
-// 도서관 정보를 표시하는 인포윈도우 내용 생성 함수
-function createLibraryInfowindowContent(library) {
-  return `
+        // 유효한 위도와 경도 값인지 확인
+        if (!isNaN(lat) && !isNaN(lng)) {
+          resultItem.onclick = function () {
+            selectedLibrary = library; // 선택된 도서관 정보 저장
+            var position = new kakao.maps.LatLng(lat, lng);
+            displayLocation(position, library.name, library);
+            showNearbyLibraries(lat, lng); // 클릭 시 해당 위치를 기준으로 주변 도서관 검색
+          };
+        } else {
+          resultItem.onclick = function () {
+            console.error(`Invalid latitude or longitude for the selected library: ${library.name}`);
+          };
+        }
+
+        searchResultDiv.appendChild(resultItem);
+      });
+    }
+
+    // 도서관 정보를 표시하는 인포윈도우 내용 생성 함수
+    function createLibraryInfowindowContent(library) {
+      return `
     <div class="infowindow-content">
       <button class="infowindow-close" onclick="closeInfowindow()">&times;</button>
       <div class="library-name">${library.name}</div>
       ${library.roaddress ? `<div class="library-info">${library.roaddress}</div>` : ''}
       ${library.tel ? `<div class="library-info">전화: ${library.tel}</div>` : ''}
       ${library.homepage ? `<div class="library-info"><a href="${library.homepage}" target="_blank">홈페이지</a></div>` : ''}
+      <div class="library-info"><a href="#" onclick="findDirections(${library.lat}, ${library.lng}, '${library.name}')">길찾기</a></div>
     </div>
   `;
-}
+    }
 
-// 도서관들을 지도에 표시하는 함수
-function showLibrariesOnMap(libraries) {
-  clearMarkers();
-  var bounds = new kakao.maps.LatLngBounds();
+    // 도서관들을 지도에 표시하는 함수
+    function showLibrariesOnMap(libraries) {
+      clearMarkers();
+      var bounds = new kakao.maps.LatLngBounds();
 
-  libraries.forEach(library => {
-    var markerPosition = new kakao.maps.LatLng(library.lat, library.lng);
-    var marker = new kakao.maps.Marker({
-      position: markerPosition,
-      map: map,
-      image: libraryMarkerImage
-    });
-    markers.push(marker);
+      libraries.forEach(library => {
+        var markerPosition = new kakao.maps.LatLng(library.lat, library.lng);
+        var marker = new kakao.maps.Marker({
+          position: markerPosition,
+          map: map,
+          image: libraryMarkerImage
+        });
+        markers.push(marker);
 
-    var infowindow = new kakao.maps.InfoWindow({
-      content: createLibraryInfowindowContent(library)
-    });
+        var infowindow = new kakao.maps.InfoWindow({
+          content: createLibraryInfowindowContent(library)
+        });
 
-    kakao.maps.event.addListener(marker, 'click', function() {
-      if (currentInfowindow) {
-        currentInfowindow.close();
+        kakao.maps.event.addListener(marker, 'click', function () {
+          if (currentInfowindow) {
+            currentInfowindow.close();
+          }
+          infowindow.open(map, marker);
+          currentInfowindow = infowindow;
+        });
+
+        bounds.extend(markerPosition);
+      });
+
+      if (libraries.length > 0) {
+        map.setBounds(bounds);
       }
-      infowindow.open(map, marker);
-      currentInfowindow = infowindow;
-    });
-
-    bounds.extend(markerPosition);
-  });
-
-  if (libraries.length > 0) {
-    map.setBounds(bounds);
-  }
-}
-
- // 마커 초기화 함수
-function clearMarkers() {
-  markers.forEach(marker => marker.setMap(null));
-  markers = [];
-}
-
-// 인포윈도우 닫기 함수
-function closeInfowindow() {
-  if (currentInfowindow) {
-    currentInfowindow.close();
-  }
-}
+    }
 
     // 길찾기 기능
-    function findDirections() {
-      if (!selectedLibrary) {
-        alert('도서관을 먼저 선택해주세요.');
-        return;
-      }
-
-      var lat = selectedLibrary.lat;
-      var lng = selectedLibrary.lng;
-
-      // 현재 위치를 출발지로 설정
+    function findDirections(lat, lng, libraryName) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
           var startLat = position.coords.latitude;
           var startLng = position.coords.longitude;
           var startLocationName = "현재위치"; // 출발지 이름 설정
 
-          var directionsUrl = `https://map.kakao.com/link/from/${startLocationName},${startLat},${startLng}/to/${selectedLibrary.name},${lat},${lng}`;
+          var directionsUrl = `https://map.kakao.com/link/from/${startLocationName},${startLat},${startLng}/to/${libraryName},${lat},${lng}`;
           // 카카오맵 길찾기 페이지를 새 창으로 열기
           window.open(directionsUrl, '_blank');
         }, function (error) {
@@ -464,6 +452,19 @@ function closeInfowindow() {
         });
       } else {
         alert("이 브라우저에서는 Geolocation이 지원되지 않습니다.");
+      }
+    }
+
+    // 마커 초기화 함수
+    function clearMarkers() {
+      markers.forEach(marker => marker.setMap(null));
+      markers = [];
+    }
+
+    // 인포윈도우 닫기 함수
+    function closeInfowindow() {
+      if (currentInfowindow) {
+        currentInfowindow.close();
       }
     }
 
