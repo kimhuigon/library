@@ -10,26 +10,38 @@
   <!-- Kakao Maps API -->
   <script type="text/javascript"
     src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6dfaf6fb0d9d9293c6bc9220328e7540&libraries=services"></script>
+
   <style>
-    /* 검색 결과 스타일 */
+    /* 맵 컨테이너 스타일 */
+    #map-container {
+      margin-top: 20px;
+    }
 
+    /* 검색 결과 컨테이너 스타일 */
     #searchResult {
-      margin-top: 10px;
       border: 1px solid #ddd;
-      max-height: 200px;
+      max-height: 400px;
       overflow-y: auto;
+      margin-top: 10px;
+      /* 검색창 및 버튼 아래에 여백 추가 */
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     }
 
+    /* 검색 결과 항목 스타일 */
     .resultItem {
-      padding: 5px;
+      padding: 10px;
       cursor: pointer;
+      border-bottom: 1px solid #ddd;
     }
 
+    /* 검색 결과 항목 호버 스타일 */
     .resultItem:hover {
-      background-color: #eee;
+      background-color: #f1f1f1;
     }
 
-    /* 인포윈도우 스타일 */
+    /* 인포윈도우 닫기 버튼 스타일 */
     .infowindow-close {
       position: absolute;
       top: 5px;
@@ -40,6 +52,7 @@
       font-size: 18px;
     }
 
+    /* 인포윈도우 콘텐츠 스타일 */
     .infowindow-content {
       padding: 10px;
       position: relative;
@@ -49,19 +62,16 @@
       word-wrap: break-word;
     }
 
+    /* 인포윈도우 도서관 이름 스타일 */
     .infowindow-content .library-name {
       font-weight: bold;
       font-size: 14px;
       margin-bottom: 5px;
     }
 
+    /* 인포윈도우 도서관 정보 스타일 */
     .infowindow-content .library-info {
       margin-bottom: 3px;
-    }
-
-    /* 지도 컨테이너 스타일 */
-    #map-container {
-      margin-top: 20px;
     }
 
     /* 현재 위치 버튼 스타일 */
@@ -76,31 +86,30 @@
       cursor: pointer;
     }
 
+    /* 현재 위치 버튼 이미지 스타일 */
     #currentLocationButton img {
       width: 24px;
       height: 35px;
       display: block;
     }
 
+    /* 현재 위치 버튼 이미지 호버 스타일 */
     #currentLocationButton:hover img {
       transform: scale(1.1);
     }
 
-    /* 팝업 창 스타일 */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.4);
-    }
-
-    .modal-dialog {
-      margin: 15% auto;
+    /* 하단 텍스트 스타일 */
+    .styled-text {
+      text-align: center;
+      font-family: 'Arial', sans-serif;
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     }
   </style>
 </head>
@@ -127,27 +136,29 @@
   </nav>
 
   <div class="container" id="map-container">
-    <h1 id="libraryName" style="text-align: center;">도서관 찾기</h1>
-    <div class="row mb-3">
-      <div class="col">
-        <input type="text" id="searchInput" class="form-control" placeholder="도서관 이름 또는 시도로 검색"
-          onkeypress="handleKeyPress(event)">
+    <div class="row">
+      <!-- 왼쪽 열 -->
+      <div class="col-md-8">
+        <div id="map" style="width:100%;height:400px; position: relative;">
+          <button onclick="showCurrentLocation()" id="currentLocationButton" class="btn btn-link"
+            style="position: absolute; bottom: 10px; right: 10px; z-index: 1000; color: black;">현위치</button>
+        </div>
+        <h1 id="libraryName" class="styled-text">도서관 찾기</h1>
       </div>
-      <div class="col-auto">
-        <button onclick="searchLibraries()" class="btn btn-primary">검색</button>
+      <!-- 오른쪽 열 -->
+      <div class="col-md-4">
+        <div class="row mb-3">
+          <div class="col-9">
+            <input type="text" id="searchInput" class="form-control" placeholder="도서관 이름 또는 시도로 검색"
+              onkeypress="handleKeyPress(event)">
+          </div>
+          <div class="col-3">
+            <button onclick="searchLibraries()" class="btn btn-primary btn-block">검색</button>
+          </div>
+        </div>
+        <div id="searchResult" style="border: 1px solid #ddd; max-height: 400px; overflow-y: auto;"></div>
       </div>
     </div>
-    <div id="map" style="width:100%;height:400px; position: relative;">
-      <button onclick="showCurrentLocation()" id="currentLocationButton" class="btn btn-link"
-        style="position: absolute; bottom: 10px; right: 10px; z-index: 1000; color: black;">현위치</button>
-    </div>
-    <div id="searchResult"></div>
-    <div id="map" style="width:100%;height:400px; position: relative;">
-      <button onclick="showCurrentLocation()" id="currentLocationButton">
-        <img src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png" alt="현재 위치">
-      </button>
-    </div>
-    <div id="searchResult"></div>
   </div>
 
   <script>
@@ -239,7 +250,11 @@
             }
           });
 
-          showNearbyLibraries(lat, lng);
+          if (lat && lng) {
+            showNearbyLibraries(lat, lng); // 여기서 유효한 lat, lng를 제공
+          } else {
+            console.error("Invalid latitude or longitude");
+          }
         }, function (error) {
           console.error(error);
           alert("현재 위치 정보를 가져올 수 없습니다.");
@@ -294,20 +309,35 @@
       map.setCenter(position);
     }
 
-
     // 도서관 검색 함수
     function searchLibraries() {
       var query = document.getElementById('searchInput').value;
 
       fetch(`/api/libraries/search?query=${encodeURIComponent(query)}`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-          }
-          return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
-          displaySearchResults(data);
+          // 데이터가 배열인지 확인
+          const libraries = Array.isArray(data) ? data : [];
+          displaySearchResults(libraries);
+
+          if (libraries.length > 0) {
+            // 유효한 도서관을 찾을 때까지 반복
+            for (const library of libraries) {
+              var lat = parseFloat(library.lat);
+              var lng = parseFloat(library.lng);
+
+              // 디버깅 메시지
+              console.log(`Library: ${library.name}, Lat: ${lat}, Lng: ${lng}`);
+
+              // 유효한 위도와 경도 값인지 확인
+              if (!isNaN(lat) && !isNaN(lng)) {
+                showNearbyLibraries(lat, lng); // 유효한 도서관의 위치를 기준으로 주변 도서관 검색
+                break;
+              } else {
+                console.error(`Invalid latitude or longitude for the library: ${library.name}`);
+              }
+            }
+          }
         })
         .catch(error => console.error('Error:', error));
     }
@@ -317,7 +347,9 @@
       fetch(`/api/libraries/nearby?lat=${lat}&lng=${lng}&distance=5`)
         .then(response => response.json())
         .then(data => {
-          showLibrariesOnMap(data);
+          // 데이터가 배열인지 확인
+          const libraries = Array.isArray(data) ? data : [];
+          showLibrariesOnMap(libraries);
         })
         .catch(error => console.error('Error:', error));
     }
@@ -330,16 +362,28 @@
         var resultItem = document.createElement('div');
         resultItem.className = 'resultItem';
         resultItem.innerText = `${library.name} (${library.sido})`;
-        resultItem.onclick = function () {
-          selectedLibrary = library; // 선택된 도서관 정보 저장
-          var position = new kakao.maps.LatLng(library.lat, library.lng);
-          displayLocation(position, library.name, library);
-          showNearbyLibraries(library.lat, library.lng); // 클릭 시 해당 위치를 기준으로 주변 도서관 검색
-        };
+
+        // 위도와 경도를 숫자로 변환
+        var lat = parseFloat(library.lat);
+        var lng = parseFloat(library.lng);
+
+        // 유효한 위도와 경도 값인지 확인
+        if (!isNaN(lat) && !isNaN(lng)) {
+          resultItem.onclick = function () {
+            selectedLibrary = library; // 선택된 도서관 정보 저장
+            var position = new kakao.maps.LatLng(lat, lng);
+            displayLocation(position, library.name, library);
+            showNearbyLibraries(lat, lng); // 클릭 시 해당 위치를 기준으로 주변 도서관 검색
+          };
+        } else {
+          resultItem.onclick = function () {
+            console.error(`Invalid latitude or longitude for the selected library: ${library.name}`);
+          };
+        }
+
         searchResultDiv.appendChild(resultItem);
       });
     }
-
 
     // 도서관 정보를 표시하는 인포윈도우 내용 생성 함수
     function createLibraryInfowindowContent(library) {
@@ -421,7 +465,6 @@
         currentInfowindow.close();
       }
     }
-
 
     // 페이지 로드 시 지도 초기화
     window.onload = initMap;
