@@ -129,8 +129,7 @@
     <h1 id="libraryName" style="text-align: center;">도서관 찾기</h1>
     <div class="row mb-3">
       <div class="col">
-        <input type="text" id="searchInput" class="form-control" placeholder="도서관 이름 또는 시도로 검색"
-          onkeypress="handleKeyPress(event)">
+        <input type="text" id="searchInput" class="form-control" placeholder="도서관 이름 또는 시도로 검색" onkeypress="handleKeyPress(event)">
       </div>
       <div class="col-auto">
         <button onclick="searchLibraries()" class="btn btn-primary">검색</button>
@@ -139,6 +138,12 @@
         <button onclick="findDirections()" class="btn btn-primary">길찾기</button>
       </div>
     </div>
+    <div id="map" style="width:100%;height:400px; position: relative;">
+      <button onclick="showCurrentLocation()" id="currentLocationButton" class="btn btn-link" style="position: absolute; bottom: 10px; right: 10px; z-index: 1000; color: black;">현위치</button>
+    </div>
+    <div id="searchResult"></div>
+
+    
     <!-- 길찾기 -->
     <div id="directionsPopup" class="modal" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
@@ -246,123 +251,131 @@
       }
     }
 
-    // 현재 위치 표시 함수
-    function showCurrentLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-          var lat = position.coords.latitude;
-          var lng = position.coords.longitude;
-          var locPosition = new kakao.maps.LatLng(lat, lng);
+// 현재 위치 표시 함수
+function showCurrentLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      var lat = position.coords.latitude;
+      var lng = position.coords.longitude;
+      var locPosition = new kakao.maps.LatLng(lat, lng);
 
-          // 좌표를 주소로 변환
-          geocoder.coord2Address(lng, lat, function (result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-              var address = result[0].address.address_name;
-              displayLocation(locPosition, "현재 위치", null, address);
-            } else {
-              displayLocation(locPosition, "현재 위치");
-            }
-          });
-
-          showNearbyLibraries(lat, lng);
-        }, function (error) {
-          console.error(error);
-          alert("위치 정보를 가져올 수 없습니다.");
-        });
-      } else {
-        alert("이 브라우저에서는 Geolocation이 지원되지 않습니다.");
-      }
-    }
-
-    // 위치 표시 함수 (현재 위치 또는 도서관 위치)
-    function displayLocation(position, title, library = null, address = null) {
-      if (currentLocationMarker) {
-        currentLocationMarker.setMap(null);
-      }
-      if (currentInfowindow) {
-        currentInfowindow.close();
-      }
-
-      currentLocationMarker = new kakao.maps.Marker({
-        map: map,
-        position: position,
-        image: library ? libraryMarkerImage : currentMarkerImage
+      // 좌표를 주소로 변환
+      geocoder.coord2Address(lng, lat, function(result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+          var address = result[0].address.address_name;
+          displayLocation(locPosition, "현재 위치", null, address);
+        } else {
+          displayLocation(locPosition, "현재 위치");
+        }
       });
 
-      // 상단 페이지 제목 업데이트
-      var libraryNameElement = document.getElementById('libraryName');
-      if (library) {
-        libraryNameElement.textContent = `${library.name}: ${library.roaddress ? library.roaddress : ''}`;
-      } else if (address) {
-        libraryNameElement.textContent = address;
-      } else {
-        libraryNameElement.textContent = title;
-      }
+      showNearbyLibraries(lat, lng);
+    }, function(error) {
+      console.error(error);
+      alert("현재 위치 정보를 가져올 수 없습니다.");
+    });
+  } else {
+    alert("이 브라우저에서는 Geolocation이 지원되지 않습니다.");
+  }
+}
 
-      var infowindowContent = library ? createLibraryInfowindowContent(library) : `
+// 위치 표시 함수 (현재 위치 또는 도서관 위치)
+function displayLocation(position, title, library = null, address = null) {
+  if (currentLocationMarker) {
+    currentLocationMarker.setMap(null);
+  }
+  if (currentInfowindow) {
+    currentInfowindow.close();
+  }
+
+  currentLocationMarker = new kakao.maps.Marker({
+    map: map,
+    position: position,
+    image: library ? libraryMarkerImage : currentMarkerImage
+  });
+
+  var libraryNameElement = document.getElementById('libraryName');
+  if (library) {
+    libraryNameElement.textContent = `${library.name}: ${library.roaddress ? library.roaddress : ''}`;
+  } else if (address) {
+    libraryNameElement.textContent = address;
+  } else {
+    libraryNameElement.textContent = title;
+  }
+
+  var infowindowContent = library ? createLibraryInfowindowContent(library) : `
     <div class="infowindow-content" style="text-align:center;">
       <button class="infowindow-close" onclick="closeInfowindow()">&times;</button>
       <div>${title}</div>
       ${address ? `<div>${address}</div>` : ''}
-    </div>`;
+    </div>
+  `;
 
-      currentInfowindow = new kakao.maps.InfoWindow({
-        content: infowindowContent,
-        zIndex: 1
-      });
+  currentInfowindow = new kakao.maps.InfoWindow({
+    content: infowindowContent,
+    zIndex: 1
+  });
 
-      kakao.maps.event.addListener(currentLocationMarker, 'click', function () {
-        currentInfowindow.open(map, currentLocationMarker);
-      });
+  kakao.maps.event.addListener(currentLocationMarker, 'click', function() {
+    currentInfowindow.open(map, currentLocationMarker);
+  });
 
-      currentInfowindow.open(map, currentLocationMarker);
-      map.setCenter(position);
-    }
-
-    // 도서관 검색 함수
-    function searchLibraries() {
-      var query = document.getElementById('searchInput').value;
-
-      fetch(`/api/libraries/search?query=${encodeURIComponent(query)}`)
-        .then(response => response.json())
-        .then(data => {
-          displaySearchResults(data);
-        })
-        .catch(error => console.error('Error:', error));
-    }
-
-    // 현재 위치 주변 도서관 검색 함수
-    function showNearbyLibraries(lat, lng) {
-      fetch(`/api/libraries/nearby?lat=${lat}&lng=${lng}&distance=5`)
-        .then(response => response.json())
-        .then(data => {
-          showLibrariesOnMap(data);
-        })
-        .catch(error => console.error('Error:', error));
-    }
-
-    // 검색 결과 표시 함수
-    function displaySearchResults(libraries) {
-      var searchResultDiv = document.getElementById('searchResult');
-      searchResultDiv.innerHTML = '';
-      libraries.forEach(library => {
-        var resultItem = document.createElement('div');
-        resultItem.className = 'resultItem';
-        resultItem.innerText = `${library.name} (${library.sido})`;
-        resultItem.onclick = function () {
-          selectedLibrary = library; // 선택된 도서관 정보 저장
-          var position = new kakao.maps.LatLng(library.lat, library.lng);
-          displayLocation(position, library.name, library);
-          showNearbyLibraries(library.lat, library.lng); // 클릭 시 해당 위치를 기준으로 주변 도서관 검색
-        };
-        searchResultDiv.appendChild(resultItem);
-      });
-    }
+  currentInfowindow.open(map, currentLocationMarker);
+  map.setCenter(position);
+}
 
 
-    // 도서관 정보 인포윈도우 내용 생성 함수
-    function createLibraryInfowindowContent(library) {
-      return `
+// 도서관 검색 함수
+function searchLibraries() {
+  var query = document.getElementById('searchInput').value;
+
+  fetch(`/api/libraries/search?query=${encodeURIComponent(query)}`)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok ' + response.statusText);
+      }
+      return response.json();
+    })
+    .then(data => {
+      displaySearchResults(data);
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+// 주변 도서관 표시 함수
+function showNearbyLibraries(lat, lng) {
+  fetch(`/api/libraries/nearby?lat=${lat}&lng=${lng}&distance=5`)
+    .then(response => response.json())
+    .then(data => {
+      showLibrariesOnMap(data);
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+
+// 검색 결과 표시 함수
+function displaySearchResults(libraries) {
+  var searchResultDiv = document.getElementById('searchResult');
+  searchResultDiv.innerHTML = '';
+  libraries.forEach(library => {
+    var resultItem = document.createElement('div');
+    resultItem.className = 'resultItem';
+    resultItem.innerText = `${library.name} (${library.sido})`;
+    resultItem.onclick = function() {
+      selectedLibrary = library; // 선택된 도서관 정보 저장
+      var position = new kakao.maps.LatLng(library.lat, library.lng);
+      displayLocation(position, library.name, library);
+      showNearbyLibraries(library.lat, library.lng); // 클릭 시 해당 위치를 기준으로 주변 도서관 검색
+    };
+    searchResultDiv.appendChild(resultItem);
+  });
+}
+
+
+// 도서관 정보를 표시하는 인포윈도우 내용 생성 함수
+function createLibraryInfowindowContent(library) {
+  return `
     <div class="infowindow-content">
       <button class="infowindow-close" onclick="closeInfowindow()">&times;</button>
       <div class="library-name">${library.name}</div>
@@ -371,54 +384,54 @@
       ${library.homepage ? `<div class="library-info"><a href="${library.homepage}" target="_blank">홈페이지</a></div>` : ''}
     </div>
   `;
-    }
+}
 
-    // 도서관들을 지도에 표시하는 함수
-    function showLibrariesOnMap(libraries) {
-      clearMarkers();
-      var bounds = new kakao.maps.LatLngBounds();
+// 도서관들을 지도에 표시하는 함수
+function showLibrariesOnMap(libraries) {
+  clearMarkers();
+  var bounds = new kakao.maps.LatLngBounds();
 
-      libraries.forEach(library => {
-        var markerPosition = new kakao.maps.LatLng(library.lat, library.lng);
-        var marker = new kakao.maps.Marker({
-          position: markerPosition,
-          map: map,
-          image: libraryMarkerImage
-        });
-        markers.push(marker);
+  libraries.forEach(library => {
+    var markerPosition = new kakao.maps.LatLng(library.lat, library.lng);
+    var marker = new kakao.maps.Marker({
+      position: markerPosition,
+      map: map,
+      image: libraryMarkerImage
+    });
+    markers.push(marker);
 
-        var infowindow = new kakao.maps.InfoWindow({
-          content: createLibraryInfowindowContent(library)
-        });
+    var infowindow = new kakao.maps.InfoWindow({
+      content: createLibraryInfowindowContent(library)
+    });
 
-        kakao.maps.event.addListener(marker, 'click', function () {
-          if (currentInfowindow) {
-            currentInfowindow.close();
-          }
-          infowindow.open(map, marker);
-          currentInfowindow = infowindow;
-        });
-
-        bounds.extend(markerPosition);
-      });
-
-      if (libraries.length > 0) {
-        map.setBounds(bounds);
-      }
-    }
-
-    // 마커 초기화 함수
-    function clearMarkers() {
-      markers.forEach(marker => marker.setMap(null));
-      markers = [];
-    }
-
-    // 인포윈도우 닫기 함수
-    function closeInfowindow() {
+    kakao.maps.event.addListener(marker, 'click', function() {
       if (currentInfowindow) {
         currentInfowindow.close();
       }
-    }
+      infowindow.open(map, marker);
+      currentInfowindow = infowindow;
+    });
+
+    bounds.extend(markerPosition);
+  });
+
+  if (libraries.length > 0) {
+    map.setBounds(bounds);
+  }
+}
+
+ // 마커 초기화 함수
+function clearMarkers() {
+  markers.forEach(marker => marker.setMap(null));
+  markers = [];
+}
+
+// 인포윈도우 닫기 함수
+function closeInfowindow() {
+  if (currentInfowindow) {
+    currentInfowindow.close();
+  }
+}
 
     // 길찾기 기능
     function findDirections() {
