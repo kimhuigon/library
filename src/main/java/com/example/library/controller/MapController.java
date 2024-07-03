@@ -31,12 +31,20 @@ public class MapController {
         return libraryService.getAllLibraries();
     }
 
+    // 도서관 이름 또는 시도로 검색
     @GetMapping("/api/libraries/search")
     @ResponseBody
-    public List<Library> searchLibraries(@RequestParam String query) {
-        return libraryService.searchLibraries(query);
+    public ResponseEntity<?> searchLibraries(@RequestParam String query) {
+        try {
+            List<Library> libraries = libraryService.searchLibraries(query);
+            return ResponseEntity.ok(libraries);
+        } catch (Exception e) {
+            log.error("Error searching libraries", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error searching libraries");
+        }
     }
 
+    // 현재 위치 기반으로 주변 도서관 검색
     @GetMapping("/api/libraries/nearby")
     @ResponseBody
     public ResponseEntity<?> getNearbyLibraries(@RequestParam double lat, @RequestParam double lng,
@@ -46,7 +54,7 @@ public class MapController {
             return ResponseEntity.ok(libraries);
         } catch (Exception e) {
             log.error("Error getting nearby libraries", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error fetching nearby libraries");
         }
     }
 }
