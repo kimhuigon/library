@@ -129,7 +129,7 @@
           <a class="nav-link" href="/posts">게시판</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/map">지도</a>
+          <a class="nav-link active" href="/map">지도</a>
         </li>
       </ul>
     </div>
@@ -196,7 +196,7 @@
       var mapContainer = document.getElementById('map');
       var mapOption = {
         center: new kakao.maps.LatLng(37.5665, 126.9780),
-        level: 7
+        level: 4
       };
       map = new kakao.maps.Map(mapContainer, mapOption);
 

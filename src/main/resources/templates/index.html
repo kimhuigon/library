@@ -22,17 +22,36 @@
       padding: 0;
       text-align: center;
     }
+
+    #log_info {
+      display: flex;
+    }
+
+    #log_info > p {
+      margin: 0;
+    }
+
+    #log_info > p > a{
+      color: white;
+    }
+
+    .container-fluid{
+      flex: 1;
+    }
   </style>
 </head>
 
 <body>
   <div id="wrap">
+    <div>
+      <h1>메인페이지입니다</h1>
+    </div>
     <div id="navi">
       <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
         <div class="container-fluid">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <a class="nav-link" href="/">Home</a>
+              <a class="nav-link active" href="/">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/posts">게시판</a>
@@ -42,17 +61,19 @@
             </li>
           </ul>
         </div>
+        <div id="log_info">
+          <p th:if="${session.user_info == null}">
+            <a th:href="@{/login}">
+              로그인 후 사용해주세요.
+            </a>
+          </p>
+          <p th:unless="${session.user_info == null}">
+            <a th:href="@{/logout}">
+              [[ ${session.user_info.name} + '님 반갑습니다.' ]]
+            </a>
+          </p>
+        </div>
       </nav>
-    </div>
-    <h1>메인페이지입니다</h1>
-    <div th:replace="/header"></div>
-    <div>
-      <ul>
-        <li>
-          <a th:href="@{/login}">로그인</a>
-          <a th:href="@{/signup}">회원가입</a>
-        </li>
-      </ul>
     </div>
   </div>
 </body>
