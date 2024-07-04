@@ -220,6 +220,7 @@
     var currentMarkerImage;
     var libraryMarkerImage;
     var currentInfowindow = null;
+    var initialZoomLevel = 5;
 
     // 카카오 맵 API 비동기 로드
     function loadKakaoMapsScript() {
@@ -236,7 +237,7 @@
         var mapContainer = document.getElementById('map');
         var mapOption = {
           center: new kakao.maps.LatLng(37.5665, 126.9780),
-          level: 3
+          level: initialZoomLevel // 초기 줌 레벨 설정
         };
         map = new kakao.maps.Map(mapContainer, mapOption);
 
@@ -359,6 +360,7 @@
       currentInfowindow = infowindow;
 
       map.setCenter(position);
+      map.setLevel(initialZoomLevel); // 줌 레벨 고정
     }
 
     // 도서관 검색 함수
@@ -459,6 +461,7 @@
 
       if (libraries.length > 0) {
         map.setBounds(bounds);
+        map.setLevel(initialZoomLevel); // 줌 레벨 고정
       }
     }
 
