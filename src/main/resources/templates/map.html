@@ -165,7 +165,7 @@
           <a class="nav-link" href="/posts">게시판</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="/map">지도</a>
+          <a class="nav-link" href="/map">지도</a>
         </li>
       </ul>
     </div>
@@ -187,8 +187,7 @@
       <div class="col-md-4">
         <div id="searchArea">
           <div class="input-group mb-3">
-            <input type="text" id="searchInput" class="form-control" placeholder=""
-              onkeypress="handleKeyPress(event)">
+            <input type="text" id="searchInput" class="form-control" placeholder="" onkeypress="handleKeyPress(event)">
             <button onclick="searchLibraries()" class="btn btn-primary">
               <i class="fas fa-search">검색</i>
             </button>
@@ -221,7 +220,7 @@
       document.head.appendChild(script);
     }
 
-    // 맵 초기화 함수
+    // 지도 초기화 함수
     function initializeMap() {
       kakao.maps.load(function () {
         ps = new kakao.maps.services.Places();
@@ -232,23 +231,12 @@
         };
         map = new kakao.maps.Map(mapContainer, mapOption);
 
-<<<<<<< HEAD
-    // 지도 초기화 함수
-    function initMap() {
-      var mapContainer = document.getElementById('map');
-      var mapOption = {
-        center: new kakao.maps.LatLng(37.5665, 126.9780),
-        level: 4
-      };
-      map = new kakao.maps.Map(mapContainer, mapOption);
-=======
         // 현재 위치 마커 이미지 설정
         currentMarkerImage = new kakao.maps.MarkerImage(
           'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png',
           new kakao.maps.Size(24, 35),
           { offset: new kakao.maps.Point(13, 35) }
         );
->>>>>>> ae52b51a48610d250aac151dea08dcca4523c042
 
         // 도서관 마커 이미지 설정 (책 이모지 SVG)
         libraryMarkerImage = new kakao.maps.MarkerImage(
@@ -350,26 +338,58 @@
     // 도서관 검색 함수
     function searchLibraries() {
       var query = document.getElementById('searchInput').value;
+      if (!query) {
+        alert('검색어를 입력해주세요.');
+        return;
+      }
 
       // 카카오맵 장소 검색 API 사용
-      ps.keywordSearch(query, function (data, status) {
+      ps.keywordSearch(query + " 도서관", function (data, status) {
         if (status === kakao.maps.services.Status.OK) {
-          displaySearchResults(data, query);
-          var firstPlace = data[0];
-          var position = new kakao.maps.LatLng(firstPlace.y, firstPlace.x);
-          fetchAddress(firstPlace.y, firstPlace.x, "검색된 위치 주소: ");
-          showNearbyLibraries(firstPlace.y, firstPlace.x);
-          map.setCenter(position); // 검색된 위치로 맵 이동
+          // 필터링 로직 추가
+          var filteredData = data.filter(function (item) {
+            return item.place_name.includes(query);
+          });
+
+          if (filteredData.length === 0) {
+            alert('검색 결과가 없습니다.');
+          } else {
+            displaySearchResults(filteredData);
+            // 검색된 위치에 새로운 마커 추가
+            var firstPlace = filteredData[0];
+            var position = new kakao.maps.LatLng(firstPlace.y, firstPlace.x);
+
+            // 이전 검색된 위치 마커 제거
+            if (currentLocationMarker) {
+              currentLocationMarker.setMap(null);
+            }
+
+            // 새로운 마커 추가
+            currentLocationMarker = new kakao.maps.Marker({
+              position: position,
+              map: map,
+              image: currentMarkerImage
+            });
+
+            // 첫 번째 검색 결과로 지도 이동
+            map.setCenter(position);
+
+            fetchAddress(firstPlace.y, firstPlace.x, "검색된 위치 주소: ");
+            showNearbyLibraries(firstPlace.y, firstPlace.x);
+          }
         } else {
           alert('검색 결과가 없습니다.');
         }
       });
     }
 
+
+
+
     // 주변 도서관 표시 함수
     function showNearbyLibraries(lat, lng) {
       // API 호출하여 SQL에 등록된 도서관 정보 가져오기
-      fetch(`/api/libraries/nearby?lat=${lat}&lng=${lng}&distance=5`)
+      fetch(`/api/libraries/nearby?lat=${lat}&lng=${lng}&distance=2`)
         .then(response => response.json())
         .then(libraries => {
           showLibrariesOnMap(libraries);
@@ -418,25 +438,37 @@
       }
     }
 
-    // 검색 결과 표시 함수
-    function displaySearchResults(libraries, query) {
+    // 검색 결과 표시 함수 수정
+    function displaySearchResults(libraries) {
       var searchResultDiv = document.getElementById('searchResult');
       searchResultDiv.innerHTML = '';
       libraries.forEach(function (library) {
-        if (library.place_name.includes(query)) {
-          var resultItem = document.createElement('div');
-          resultItem.className = 'resultItem';
-          resultItem.innerHTML = `<i class="fas fa-map-marker-alt mr-2"></i> ${library.place_name}`;
-          resultItem.onclick = function () {
-            var position = new kakao.maps.LatLng(library.y, library.x);
-            map.setCenter(position);
-            fetchAddress(library.y, library.x, "검색된 위치 주소: ");
-            showNearbyLibraries(library.y, library.x);
-          };
-          searchResultDiv.appendChild(resultItem);
-        }
+        var resultItem = document.createElement('div');
+        resultItem.className = 'resultItem';
+        resultItem.innerHTML = `<i class="fas fa-map-marker-alt mr-2"></i> ${library.place_name}`;
+        resultItem.onclick = function () {
+          var position = new kakao.maps.LatLng(library.y, library.x);
+          map.setCenter(position);
+
+          // 기존 마커 제거
+          if (currentLocationMarker) {
+            currentLocationMarker.setMap(null);
+          }
+
+          // 새 마커 생성 및 표시
+          currentLocationMarker = new kakao.maps.Marker({
+            position: position,
+            map: map,
+            image: currentMarkerImage
+          });
+
+          fetchAddress(library.y, library.x, "선택한 도서관 주소: ");
+          showNearbyLibraries(library.y, library.x);
+        };
+        searchResultDiv.appendChild(resultItem);
       });
     }
+
 
     // 도서관 정보 표시 함수
     function showLibraryInfo(library) {
