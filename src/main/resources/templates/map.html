@@ -211,6 +211,8 @@
     var currentMarkerImage;
     var libraryMarkerImage;
     var currentInfowindow = null;
+    let lat = null;
+    let lng = null;
 
     // 카카오 맵 API 비동기 로드
     function loadKakaoMapsScript() {
@@ -226,10 +228,21 @@
         ps = new kakao.maps.services.Places();
         var mapContainer = document.getElementById('map');
         var mapOption = {
-          center: new kakao.maps.LatLng(37.5665, 126.9780),
+          center: new kakao.maps.LatLng(lat, lng),
           level: 3
         };
         map = new kakao.maps.Map(mapContainer, mapOption);
+
+        // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+        var mapTypeControl = new kakao.maps.MapTypeControl();
+
+        // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+        // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+        map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+        // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+        var zoomControl = new kakao.maps.ZoomControl();
+        map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
         // 현재 위치 마커 이미지 설정
         currentMarkerImage = new kakao.maps.MarkerImage(
@@ -344,7 +357,7 @@
       }
 
       // 카카오맵 장소 검색 API 사용
-      ps.keywordSearch(query + " 도서관", function (data, status) {
+      ps.keywordSearch(query, function (data, status) {
         if (status === kakao.maps.services.Status.OK) {
           // 필터링 로직 추가
           var filteredData = data.filter(function (item) {
