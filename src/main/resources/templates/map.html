@@ -355,6 +355,9 @@
         return;
       }
 
+      // 검색 전 기존 마커 제거
+      clearMarkers();
+
       // 카카오맵 장소 검색 API 사용
       ps.keywordSearch(query, function (data, status) {
         if (status === kakao.maps.services.Status.OK) {
@@ -395,7 +398,17 @@
       });
     }
 
+    // 검색 영역으로 돌아가는 함수
+    function showSearchArea() {
+      document.getElementById('searchArea').style.display = 'block';
+      document.getElementById('libraryInfo').style.display = 'none';
 
+      // 검색창 초기화
+      document.getElementById('searchInput').value = '';
+
+      // 검색 결과 목록 초기화
+      document.getElementById('searchResult').innerHTML = '';
+    }
 
 
     // 주변 도서관 표시 함수
