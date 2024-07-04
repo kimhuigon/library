@@ -504,7 +504,7 @@
         <h3>${library.name}</h3>
         <p><i class="fas fa-map-marker-alt"></i> 주소: ${library.roaddress || '정보 없음'}</p>
         <p><i class="fas fa-phone"></i> 전화: ${library.tel || '정보 없음'}</p>
-        <p><i class="fas fa-globe"></i> ${library.homepage ? `<a href="${library.homepage}" target="_blank">홈페이지 링크</a>` : '정보 없음'}</p>
+        <p><i class="fas fa-globe"></i> ${library.homepage ? `<a href="${library.homepage}" target="_blank">홈페이지</a>` : '정보 없음'}</p>
         <p><a href="#" onclick="findDirections(${library.lat}, ${library.lng}, '${library.name}')"><i class="fas fa-directions"></i> 길찾기</a></p>
         <button onclick="showSearchArea()" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> 검색으로 돌아가기</button>
       `;
