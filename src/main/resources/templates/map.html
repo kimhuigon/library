@@ -551,6 +551,83 @@
       });
     }
 
+        // 검색 영역으로 돌아가는 함수
+        function showSearchArea() {
+      document.getElementById('searchArea').style.display = 'block';
+      document.getElementById('libraryInfo').style.display = 'none';
+
+      // 검색창 초기화
+      document.getElementById('searchInput').value = '';
+
+      // 검색 결과 목록 초기화
+      document.getElementById('searchResult').innerHTML = '';
+
+      // 지도 위의 마커들 제거
+      clearMarkers();
+
+      // 현재 위치 마커 제거
+      if (currentLocationMarker) {
+        currentLocationMarker.setMap(null);
+        currentLocationMarker = null;
+      }
+
+      // 인포윈도우 닫기
+      closeInfowindow();
+
+      // 지도를 현재 위치로 이동하고 주소 가져오기
+      if (currentLocation) {
+        map.setCenter(currentLocation);
+        displayLocation(currentLocation, "현재 위치", true);
+        showNearbyLibraries(currentLocation.getLat(), currentLocation.getLng());
+
+        // 현재 위치의 주소 가져오기
+        fetchAddress(currentLocation.getLat(), currentLocation.getLng(), "현재 위치 주소: ");
+      } else {
+        // 현재 위치를 가져올 수 없는 경우
+        document.getElementById('addressContainer').innerText = "현재 위치 주소: 위치 정보를 가져올 수 없습니다.";
+
+        // 현재 위치 가져오기 시도
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function (position) {
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+            currentLocation = new kakao.maps.LatLng(lat, lng);
+            map.setCenter(currentLocation);
+            displayLocation(currentLocation, "현재 위치", true);
+            showNearbyLibraries(lat, lng);
+            fetchAddress(lat, lng, "현재 위치 주소: ");
+          }, function (error) {
+            console.error(error);
+            alert("현재 위치 정보를 가져올 수 없습니다.");
+          });
+        } else {
+          alert("이 브라우저에서는 Geolocation이 지원되지 않습니다.");
+        }
+      }
+    }
+
+    // 주소 가져오기 함수 (기존 함수 유지)
+    function fetchAddress(lat, lng, prefix) {
+      var geocoder = new kakao.maps.services.Geocoder();
+      var coord = new kakao.maps.LatLng(lat, lng);
+      geocoder.coord2Address(coord.getLng(), coord.getLat(), function (result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+          var address = result[0].address.address_name;
+          document.getElementById('addressContainer').innerText = prefix + address;
+        } else {
+          document.getElementById('addressContainer').innerText = prefix + "정보를 가져올 수 없습니다.";
+        }
+      });
+    }
+
+    // 인포윈도우 닫기 함수
+    function closeInfowindow() {
+      if (currentInfowindow) {
+        currentInfowindow.close();
+        currentInfowindow = null;
+      }
+    }
+
 
     // 페이지 로드 시 카카오 맵 스크립트 로드
     window.onload = loadKakaoMapsScript;
