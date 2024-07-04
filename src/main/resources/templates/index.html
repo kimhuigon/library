@@ -31,20 +31,21 @@
           </ul>
         </div>
         <div id="log_info">
-          <p th:if="${session.user_info == null}">
-            <a th:href="@{/login}">
-              로그인 후 사용해주세요.
-            </a>
-          </p>
           <p th:unless="${session.user_info == null}">
-            <a th:href="@{/logout}">
-              [[ ${session.user_info.name} + '님 반갑습니다.' ]]
-            </a>
+            <a th:href="@{/}">[[ ${session.user_info.name} + '님 반갑습니다' ]]</a>
+          </p>
+          <p class="logout">
+            <a th:href="@{/logout}">로그아웃</a>
           </p>
         </div>
       </nav>
     </div>
   </div>
+  <script>
+    if (!'[[${session.user_info}]]') {
+      location = '/login';
+    }
+  </script>
 </body>
 
 </html>

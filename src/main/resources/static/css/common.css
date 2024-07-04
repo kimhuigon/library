@@ -32,6 +32,11 @@ h1 {
 
 #log_info>p>a {
   color: white;
+  padding:5px 20px 5px 0px;
+}
+
+#log_info>p>a:hover {
+  color: gray;
 }
 
 .container-fluid {
