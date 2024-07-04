@@ -10,6 +10,7 @@ ul li {
 h1 {
   color: white;
   font-weight: bolder;
+  z-index: 100;
 }
 
 #wrap {
@@ -32,7 +33,7 @@ h1 {
 
 #log_info>p>a {
   color: white;
-  padding:5px 20px 5px 0px;
+  padding: 5px 20px 5px 0px;
 }
 
 #log_info>p>a:hover {
@@ -44,6 +45,7 @@ h1 {
 }
 
 #top {
+  position: relative;
   height: 200px;
   display: flex;
   justify-content: center;
@@ -51,4 +53,14 @@ h1 {
   background-image: url("/image/library-1147815_1280.jpg");
   /* 이미지출처) https://pixabay.com/ko/photos/%EB%8F%84%EC%84%9C%EA%B4%80-%EC%84%9C%EC%A0%81-%EC%B1%85%EC%9E%A5-%EB%AC%B8%ED%95%99-1147815/ */
   background-position: center;
+}
+
+#top::before {
+  position: absolute;
+  content: "";
+  top:0px;
+  left:0px;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
 }
