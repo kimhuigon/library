@@ -11,6 +11,7 @@
   <style>
     .error {
       color: red;
+      margin: 0;
     }
 
     #signup {
@@ -22,18 +23,53 @@
 
     .signupform {
       border: 5px solid #ffd9e5;
-      padding: 30px;
+      padding: 15px;
+      width: 50%;
+      height: 100%;
+      display: flex;
+    }
+
+    .suform {
+      padding: 10px;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
     }
 
     .form-group {
-      margin: 10px;
+      padding: 10px 0px;
+      width: 100%;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+    }
+
+    .userbt {
+      display: flex;
+      flex: 1;
+    }
+
+    .userbt > input {
+      flex: 5;
+    }
+
+    .form-group>input {
+      flex: 1;
+    }
+
+    .logo {
+      display: flex;
+    }
+
+    .logo > img {
+      width: 150px;
     }
   </style>
 </head>
 
 <body>
   <div id="wrap">
-    <div id="top">
+    <!-- <div id="top">
       <h1>📚메인페이지입니다📚</h1>
     </div>
     <div id="navi">
@@ -52,36 +88,37 @@
           </ul>
         </div>
       </nav>
-    </div>
+    </div> -->
     <div id="signup">
       <div class="signupform">
-        <h4>회원가입</h4>
-        <form action="/signup" th:object="${UserForm}" method="post">
+        <form action="/signup" th:object="${UserForm}" method="post" class="suform">
+          <div class="logo"><img src="/image/logo.png" alt="logo"></div>
           <div class="form-group">
-            <label th:for="userId">아이디</label>
-            <input type="text" name="userId" id="userId">
-            <button id="idcheck">중복확인</button>
-            <p id="userIdFeedback" class="error"></p>
+            <div class="userbt">
+              <label th:for="userId"></label>
+              <input type="text" name="userId" id="userId" placeholder="아이디">
+              <button id="idcheck">중복확인</button>
+            </div>
             <p th:if="${userIdError}" th:text="${userIdError}" class="error"></p>
           </div>
           <div class="form-group">
-            <label th:for="password">비밀번호</label>
-            <input type="password" name="password" id="password">
+            <label th:for="password"></label>
+            <input type="password" name="password" id="password" placeholder="비밀번호">
             <p th:if="${passwordError}" th:text="${passwordError}" class="error"></p>
           </div>
           <div class="form-group">
-            <label th:for="password_confirm">비밀번호 확인</label>
-            <input type="password" name="password_confirm" id="password_confirm">
+            <label th:for="password_confirm"></label>
+            <input type="password" name="password_confirm" id="password_confirm" placeholder="비밀번호 확인">
             <p th:if="${password_confirmError}" th:text="${password_confirmError}" class="error"></p>
           </div>
           <div class="form-group">
-            <label th:for="name">이름</label>
-            <input type="text" name="name" id="name" placeholder="이름을 입력하세요">
+            <label th:for="name"></label>
+            <input type="text" name="name" id="name" placeholder="이름">
             <p th:if="${nameError}" th:text="${nameError}" class="error"></p>
           </div>
           <div class="form-group">
-            <label th:for="email">이메일</label>
-            <input type="email" name="email" id="email" placeholder="user@gmail.com">
+            <label th:for="email"></label>
+            <input type="email" name="email" id="email" placeholder="이메일">
             <p th:if="${emailError}" th:text="${emailError}" class="error"></p>
           </div>
           <button type="submit">가입하기</button>
