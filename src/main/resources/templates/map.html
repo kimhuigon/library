@@ -228,27 +228,16 @@
         var mapContainer = document.getElementById('map');
         var mapOption = {
           center: new kakao.maps.LatLng(37.5665, 126.9780),
-          level: 7
+          level: 3
         };
         map = new kakao.maps.Map(mapContainer, mapOption);
 
-<<<<<<< HEAD
-    // 지도 초기화 함수
-    function initMap() {
-      var mapContainer = document.getElementById('map');
-      var mapOption = {
-        center: new kakao.maps.LatLng(37.5665, 126.9780),
-        level: 4
-      };
-      map = new kakao.maps.Map(mapContainer, mapOption);
-=======
         // 현재 위치 마커 이미지 설정
         currentMarkerImage = new kakao.maps.MarkerImage(
           'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png',
           new kakao.maps.Size(24, 35),
           { offset: new kakao.maps.Point(13, 35) }
         );
->>>>>>> ae52b51a48610d250aac151dea08dcca4523c042
 
         // 도서관 마커 이미지 설정 (책 이모지 SVG)
         libraryMarkerImage = new kakao.maps.MarkerImage(
