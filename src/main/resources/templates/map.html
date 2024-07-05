@@ -66,11 +66,13 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      opacity: 0.7;
     }
 
     .btn-custom:hover {
       background-color: #0056b3;
       transform: translateY(-2px);
+      opacity: 1; /* 호버 시 투명도 제거 */
     }
 
     .btn-custom:active {
@@ -274,6 +276,7 @@
             libraryMarkerImage = new kakao.maps.MarkerImage(
               'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(`
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="30" height="30">
+              <circle cx="12" cy="12" r="11" stroke="black" stroke-width="1" fill="black" />
               <text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="20">📚</text>
             </svg>
           `),
