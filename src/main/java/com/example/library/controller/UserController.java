@@ -88,34 +88,30 @@ public class UserController {
   @GetMapping("/mypage")
   public String mypage(Model model) {
     User user = (User)session.getAttribute("user_info");
-    String name = user.getUserId();
+    String id = user.getUserId();
 
-    model.addAttribute("userId", name);
+    model.addAttribute("userId", id);
     return "mypage";
   }
 
   @GetMapping("userupdate/{userId}")
   public String userupdate(Model model) {
     User user = (User)session.getAttribute("user_info");
-    String name = user.getUserId();
+    String id = user.getUserId();
 
-    user.setName(name);
-
-    model.addAttribute("userId", name);
+    model.addAttribute("userId", id);
+    model.addAttribute("user", user);
     return "/userupdate";
   }
 
   @PostMapping("/userupdate/{userId}")
-  public String userupdatePost(@ModelAttribute User user, @PathVariable("userId") String userId) {
-    user = (User)session.getAttribute("user_info");
+  public String userupdatePost(@ModelAttribute UserForm userForm) {
+    User user = (User)session.getAttribute("user_info");
+    user.setName(userForm.getName());
+    user.setEmail(userForm.getEmail());
 
-    String userid = user.getUserId();
-    user.getPassword();
-    user.getName();
-    user.getEmail();
     userRepository.save(user);
-
-    return "mypage";
+    return "redirect:/mypage";
   }
 
   @GetMapping("/delete/{userId}")

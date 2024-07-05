@@ -4,6 +4,7 @@
 <head>
     <title>Posts List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/common.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
@@ -26,22 +27,34 @@
 </head>
 
 <body>
-    <!-- 네비바 -->
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <div class="container-fluid">
+    <div id="top">
+        <h1>📚메인페이지입니다📚</h1>
+      </div>
+      <div id="navi">
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+          <div class="container-fluid">
             <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="/posts">게시판</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/map">지도</a>
-                </li>
+              <li class="nav-item">
+                <a class="nav-link " href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link active"  href="/posts">게시판</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/map">지도</a>
+              </li>
             </ul>
-        </div>
-    </nav>
+          </div>
+          <div id="log_info">
+            <p th:unless="${session.user_info == null}">
+              <a th:href="@{/mypage}">[[ ${session.user_info.name} + '님 반갑습니다' ]]</a>
+            </p>
+            <p>
+              <a th:href="@{/}">돌아가기</a>
+            </p>
+          </div>
+        </nav>
+      </div>
     <div class="container mt-4">
         <h1 style="text-align: center;">게시판</h1>
         <a href="#" id="createPostButton" class="btn btn-primary mb-3">게시글 작성</a>
