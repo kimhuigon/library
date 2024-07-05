@@ -17,7 +17,7 @@ public class PostService {
     private PostRepository postRepository;
 
     public Page<Post> findAll(Pageable pageable) {
-        return postRepository.findAll(pageable);
+        return postRepository.findAllByOrderByCreatedDateDesc(pageable);
     }
 
     public Optional<Post> findById(Long id) {
