@@ -32,7 +32,7 @@
         </div>
         <div id="log_info">
           <p th:unless="${session.user_info == null}">
-            <a th:href="@{/}">[[ ${session.user_info.name} + '님 반갑습니다' ]]</a>
+            <a th:href="@{/mypage}">[[ ${session.user_info.name} + '님 반갑습니다' ]]</a>
           </p>
           <p class="logout">
             <a th:href="@{/logout}">로그아웃</a>

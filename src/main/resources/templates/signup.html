@@ -49,6 +49,10 @@
       flex: 1;
     }
 
+    .userbt > button {
+      margin-left: 10px;
+    }
+
     .userbt > input {
       flex: 5;
     }
@@ -64,31 +68,27 @@
     .logo > img {
       width: 150px;
     }
+
+    button {
+      border-radius: 5px;
+      border: 5px solid #ffd9e5;
+      box-sizing: border-box;
+      background-color: snow;
+      font-weight: bold;
+    }
+    
+    button+button {
+      margin-top: 10px;
+    }
+
+    button:hover {
+    background-color: #ffd9e5;
+    }
   </style>
 </head>
 
 <body>
   <div id="wrap">
-    <!-- <div id="top">
-      <h1>📚메인페이지입니다📚</h1>
-    </div>
-    <div id="navi">
-      <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-        <div class="container-fluid">
-          <ul class="navbar-nav">
-            <li class="nav-item">
-              <a class="nav-link" href="/">Home</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/posts">게시판</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/map">지도</a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    </div> -->
     <div id="signup">
       <div class="signupform">
         <form action="/signup" th:object="${UserForm}" method="post" class="suform">

@@ -1,5 +1,9 @@
 package com.example.library.controller;
 
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.tomcat.jni.FileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -29,7 +33,8 @@ public class UserController {
   HttpSession session;
   @Autowired
   EncryptUtil encryptUtil;
-  @Autowired UserService userService;
+  @Autowired
+  UserService userService;
 
   @GetMapping("/login")
   public String login() {
@@ -38,7 +43,8 @@ public class UserController {
 
   @PostMapping("/login")
   public String loginPost(@ModelAttribute UserForm userForm) {
-    User users = userRepository.findByUserIdAndPassword(userForm.getUserId(), encryptUtil.encode(userForm.getPassword()));
+    User users = userRepository.findByUserIdAndPassword(userForm.getUserId(),
+        encryptUtil.encode(userForm.getPassword()));
     if (users != null) {
       session.setAttribute("user_info", users);
     }
@@ -59,7 +65,7 @@ public class UserController {
 
   @PostMapping("/signup")
   public String signupPost(@ModelAttribute @Valid UserForm userForm, BindingResult result, Model model) {
-    if(result.hasErrors()) {
+    if (result.hasErrors()) {
       result.getFieldErrors().forEach(error -> {
         model.addAttribute(error.getField() + "Error", error.getDefaultMessage());
       });
@@ -77,5 +83,24 @@ public class UserController {
   @GetMapping("/userId/{userId}/exists")
   public ResponseEntity<Boolean> checkUserIdDuplicate(@PathVariable String userId) {
     return ResponseEntity.ok(userService.checkUserIdDuplicate(userId));
+  }
+
+  @GetMapping("/mypage")
+  public String mypage() {
+    return "mypage";
+  }
+
+  @PostMapping("/mypage")
+  public String mypagePost() {
+    return "mypage";
+  }
+
+  @GetMapping("/userId/delete/{userId}")
+  public String boardDelete(@PathVariable("userId") String userId) {
+    User user = new User();
+    user.setUserId(userId);
+
+    userRepository.deleteById(userId);
+    return "redirect:/";
   }
 }
