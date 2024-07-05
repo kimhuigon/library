@@ -49,8 +49,8 @@
             <p th:unless="${session.user_info == null}">
               <a th:href="@{/mypage}">[[ ${session.user_info.name} + '님 반갑습니다' ]]</a>
             </p>
-            <p>
-              <a th:href="@{/}">돌아가기</a>
+            <p class="logout">
+              <a th:href="@{/logout}">로그아웃</a>
             </p>
           </div>
         </nav>

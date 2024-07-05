@@ -17,14 +17,14 @@
                 <div class="alert alert-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></div>
             </div>
             <div class="mb-3">
-                <label for="content" class="form-label">Content:</label>
+                <label for="content" class="form-label">내용:</label>
                 <textarea id="content" class="form-control" th:field="*{content}"></textarea>
             </div>
             <div class="mb-3">
-                <label for="author" class="form-label">Author:</label>
+                <label for="author" class="form-label">작성자:</label>
                 <input type="text" id="author" class="form-control" th:field="*{author}" />
             </div>
-            <button type="submit" class="btn btn-primary">게시글 작성</button>
+            <button type="submit" class="btn btn-primary">작성 완료</button>
         </form>
     </div>
     <script>
