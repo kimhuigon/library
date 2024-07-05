@@ -424,7 +424,7 @@
         // 주변 도서관 표시 함수
         function showNearbyLibraries(lat, lng) {
           // API 호출하여 SQL에 등록된 도서관 정보 가져오기
-          fetch(`/api/libraries/nearby?lat=${lat}&lng=${lng}&distance=2`)
+          fetch(`/api/libraries/nearby?lat=${lat}&lng=${lng}&distance=5`)
             .then(response => response.json())
             .then(libraries => {
               showLibrariesOnMap(libraries);
