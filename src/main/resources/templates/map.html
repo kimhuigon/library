@@ -220,8 +220,11 @@
           <p th:unless="${session.user_info == null}">
             <a th:href="@{/mypage}">[[ ${session.user_info.name} + '님 반갑습니다' ]]</a>
           </p>
-          <p class="logout">
+          <p class="logout" th:if="${session.user_info != null}">
             <a th:href="@{/logout}">로그아웃</a>
+          </p>
+          <p class="login" th:if="${session.user_info == null}">
+            <a th:href="@{/login}" id="authLink">로그인</a>
           </p>
         </div>
       </nav>
@@ -268,6 +271,23 @@
         var libraryMarkerImage;
         var currentInfowindow = null;
         var initialZoomLevel = 4;
+
+        // 서버에서 로그인 상태 값을 JavaScript 변수로 전달
+        var isLoggedIn = /*[[${session.user_info != null}]]*/ false;
+
+        // 페이지 로드 시 실행
+        window.onload = function () {
+          loadKakaoMapsScript(); // 기존의 카카오맵 스크립트 로드 함수 호출
+
+        // 로그아웃 텍스트를 로그인으로 변경
+        var authLink = document.getElementById('authLink');
+          if (authLink) {
+            if (!isLoggedIn) {
+              authLink.innerText = '로그인';
+              authLink.setAttribute('href', '/login'); // 로그인 페이지 링크 설정
+            }
+          }
+        };
 
         // 카카오 맵 API 비동기 로드
         function loadKakaoMapsScript() {
