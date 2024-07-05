@@ -4,12 +4,32 @@
 <head>
     <title>Posts List</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/common.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <style>
+        @font-face {
+            font-family: 'ONE-Mobile-POP';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-POP.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+        @font-face {
+    font-family: 'HancomMalangMalang-Regular';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2406-1@1.0/HancomMalangMalang-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+}
+
+        body {
+            font-family: 'ONE-Mobile-POP', sans-serif;
+        }
+
+        .table-font {
+            font-family: 'HancomMalangMalang-Regular';
+        }
+
         .on {
-            font-weight: bold;
+            font-weight: normal;
             text-decoration: underline;
         }
 
@@ -27,22 +47,19 @@
 </head>
 
 <body>
-    <div id="top">
-        <h1>📚메인페이지입니다📚</h1>
-      </div>
-      <div id="navi">
-        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-          <div class="container-fluid">
+    <!-- 네비바 -->
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+        <div class="container-fluid">
             <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link " href="/">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link active"  href="/posts">게시판</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="/map">지도</a>
-              </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/posts">게시판</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/map">지도</a>
+                </li>
             </ul>
           </div>
           <div id="log_info">
@@ -58,7 +75,7 @@
     <div class="container mt-4">
         <h1 style="text-align: center;">게시판</h1>
         <a href="#" id="createPostButton" class="btn btn-primary mb-3">게시글 작성</a>
-        <table class="table table-striped">
+        <table class="table table-striped table-font">
             <thead>
                 <tr>
                     <th>게시글 번호</th>
@@ -82,29 +99,37 @@
             <span th:text="'Page ' + ${postPage.number + 1} + ' of ' + ${postPage.totalPages}"></span>
         </div>
 
-        <div class="pagination">
-            <a th:if="${postPage.hasPrevious()}"
-                th:href="@{/posts(page=${postPage.number - 1}, size=${postPage.size})}">Previous</a>
-            <span th:each="pageNum : ${pageNumbers}">
-                <a th:if="${pageNum - 1 != postPage.number}"
-                    th:href="@{/posts(page=${pageNum - 1}, size=${postPage.size})}" th:text="${pageNum}"></a>
-                <span th:if="${pageNum - 1 == postPage.number}" th:text="${pageNum}" class="active"></span>
-            </span>
-            <a th:if="${postPage.hasNext()}"
-                th:href="@{/posts(page=${postPage.number + 1}, size=${postPage.size})}">Next</a>
-        </div>
+        <!-- Bootstrap Pagination -->
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${postPage.hasPrevious()} ? '' : 'disabled'">
+                    <a class="page-link"
+                        th:href="@{/posts(page=${postPage.number - 1}, size=${postPage.size})}">Previous</a>
+                </li>
+                <li class="page-item" th:each="pageNum : ${pageNumbers}"
+                    th:classappend="${pageNum - 1 == postPage.number} ? 'active' : ''">
+                    <a class="page-link" th:if="${pageNum - 1 != postPage.number}"
+                        th:href="@{/posts(page=${pageNum - 1}, size=${postPage.size})}" th:text="${pageNum}"></a>
+                    <span class="page-link" th:if="${pageNum - 1 == postPage.number}" th:text="${pageNum}"></span>
+                </li>
+                <li class="page-item" th:classappend="${postPage.hasNext()} ? '' : 'disabled'">
+                    <a class="page-link"
+                        th:href="@{/posts(page=${postPage.number + 1}, size=${postPage.size})}">Next</a>
+                </li>
+            </ul>
+        </nav>
     </div>
     <script>
-        $(document).ready(function() {
-            $('#createPostButton').click(function(e) {
+        $(document).ready(function () {
+            $('#createPostButton').click(function (e) {
                 e.preventDefault();
                 $.ajax({
                     url: '/posts/new',
                     type: 'GET',
-                    success: function(response) {
+                    success: function (response) {
                         window.location.href = response;
                     },
-                    error: function(xhr, status, error) {
+                    error: function (xhr, status, error) {
                         if (xhr.status === 401) {
                             alert('로그인이 필요합니다.');
                             window.location.href = '/login';
@@ -115,7 +140,8 @@
                 });
             });
         });
-        </script>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
