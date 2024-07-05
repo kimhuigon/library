@@ -22,7 +22,11 @@
     /* 지도 컨테이너 여백 */
     #map-container {
       margin-top: 20px;
-      height: 400px;
+      height: calc(100vh - 200px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+      overflow: hidden; /* 넘치는 부분 숨김 */
+      position: relative;
     }
 
     /* 검색 결과 컨테이너 */
@@ -33,6 +37,9 @@
       overflow-y: auto;
       margin-top: 10px;
       text-align: left;
+      padding: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background-color: #fff;
     }
 
     /* 개별 검색 결과 항목 */
@@ -41,10 +48,33 @@
       cursor: pointer;
       border-bottom: 1px solid #eee;
       transition: background-color 0.3s;
+      display: flex;
+      align-items: center;
+      font-size: 16px;
+    }
+
+    .resultItem i {
+      margin-right: 10px;
     }
 
     .resultItem:hover {
       background-color: #f8f9fa;
+    }
+
+    /* 검색 입력 필드 및 버튼 스타일 */
+    .input-group {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+      border-radius: 5px; /* 모서리 둥글게 */
+    }
+
+    .input-group .form-control {
+      border-right: none; /* 오른쪽 경계선 제거 */
+      border-radius: 5px 0 0 5px; /* 모서리 둥글게 */
+    }
+
+    .input-group .btn {
+      border-left: none; /* 왼쪽 경계선 제거 */
+      border-radius: 0 5px 5px 0; /* 모서리 둥글게 */
     }
 
     /* 현재 위치 버튼 */
@@ -111,6 +141,7 @@
 
     #libraryInfo p {
       margin-bottom: 15px;
+      font-size: 16px;
     }
 
     /* 인포윈도우 내용 */
@@ -159,6 +190,7 @@
       background-color: #e9ecef;
       border-radius: 10px;
       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      transition: background-color 0.3s;
     }
   </style>
 </head>
@@ -190,13 +222,11 @@
         <div class="row">
           <!-- 왼쪽 열 -->
           <div class="col-md-8">
-            <div id="map" style="width:100%;height:500px; position: relative;">
+            <div id="map" style="width:100%;height:450px; position: relative;">
               <button onclick="showCurrentLocation()" id="currentLocationButton" class="btn-custom">
                 R
               </button>
             </div>
-            <div id="addressContainer" class="styled-text">현재 위치 주소: 정보를 가져오는 중...</div>
-            <div id="currentLocationInfo" style="display: none;"></div>
           </div>
           <!-- 오른쪽 열 -->
           <div class="col-md-4">
@@ -215,6 +245,8 @@
             </div>
           </div>
         </div>
+        <div id="addressContainer" class="styled-text">현재 위치 주소: 정보를 가져오는 중...</div>
+        <div id="currentLocationInfo" style="display: none;"></div>
       </div>
       <!-- 스크립트 섹션 -->
       <script>
