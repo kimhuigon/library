@@ -48,7 +48,7 @@ public class MapController {
     @GetMapping("/api/libraries/nearby")
     @ResponseBody
     public ResponseEntity<?> getNearbyLibraries(@RequestParam double lat, @RequestParam double lng,
-            @RequestParam(defaultValue = "2") double distance) {
+            @RequestParam(defaultValue = "5") double distance) {
         try {
             List<Library> libraries = libraryService.getNearbyLibraries(lat, lng, distance);
             return ResponseEntity.ok(libraries);
