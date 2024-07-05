@@ -9,6 +9,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <!-- Font Awesome for icons -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/common.css">
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -21,6 +22,7 @@
     /* 지도 컨테이너 여백 */
     #map-container {
       margin-top: 20px;
+      height: 400px;
     }
 
     /* 검색 결과 컨테이너 */
@@ -30,6 +32,7 @@
       max-height: 400px;
       overflow-y: auto;
       margin-top: 10px;
+      text-align: left;
     }
 
     /* 개별 검색 결과 항목 */
@@ -96,6 +99,7 @@
       border-radius: 10px;
       margin-top: 20px;
       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      text-align: left;
     }
 
     #libraryInfo h3 {
@@ -158,7 +162,12 @@
 </head>
 
 <body>
+  <div id="wrap">
+    <div id="top">
+      <h1>지도페이지</h1>
+    </div>
   <!-- 네비바 -->
+  <div id="navi">
   <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
     <div class="container-fluid">
       <ul class="navbar-nav">
@@ -215,6 +224,7 @@
     var currentMarkerImage;
     var libraryMarkerImage;
     var currentInfowindow = null;
+    var initialZoomLevel = 5;
 
     // 카카오 맵 API 비동기 로드
     function loadKakaoMapsScript() {
@@ -231,7 +241,7 @@
         var mapContainer = document.getElementById('map');
         var mapOption = {
           center: new kakao.maps.LatLng(37.5665, 126.9780),
-          level: 3
+          level: initialZoomLevel // 초기 줌 레벨 설정
         };
         map = new kakao.maps.Map(mapContainer, mapOption);
 
@@ -245,6 +255,11 @@
         // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
         var zoomControl = new kakao.maps.ZoomControl();
         map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+        // 줌 변경 시 인포윈도우 닫기
+        kakao.maps.event.addListener(map, 'zoom_changed', function () {
+        closeInfowindow();
+        });
 
 
         // 현재 위치 마커 이미지 설정
@@ -349,6 +364,7 @@
       currentInfowindow = infowindow;
 
       map.setCenter(position);
+      map.setLevel(initialZoomLevel); // 줌 레벨 고정
     }
 
     // 도서관 검색 함수
@@ -449,6 +465,7 @@
 
       if (libraries.length > 0) {
         map.setBounds(bounds);
+        map.setLevel(initialZoomLevel); // 줌 레벨 고정
       }
     }
 
@@ -496,7 +513,7 @@
         <h3>${library.name}</h3>
         <p><i class="fas fa-map-marker-alt"></i> 주소: ${library.roaddress || '정보 없음'}</p>
         <p><i class="fas fa-phone"></i> 전화: ${library.tel || '정보 없음'}</p>
-        <p><i class="fas fa-globe"></i> ${library.homepage ? `<a href="${library.homepage}" target="_blank">홈페이지 링크</a>` : '정보 없음'}</p>
+        <p><i class="fas fa-globe"></i> ${library.homepage ? `<a href="${library.homepage}" target="_blank">홈페이지</a>` : '정보 없음'}</p>
         <p><a href="#" onclick="findDirections(${library.lat}, ${library.lng}, '${library.name}')"><i class="fas fa-directions"></i> 길찾기</a></p>
         <button onclick="showSearchArea()" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> 검색으로 돌아가기</button>
       `;
