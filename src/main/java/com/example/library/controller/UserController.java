@@ -1,9 +1,5 @@
 package com.example.library.controller;
 
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.tomcat.jni.FileInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,7 +21,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-
 public class UserController {
   @Autowired
   UserRepository userRepository;

@@ -1,26 +1,21 @@
-package com.example.library.Interceptor;
+// package com.example.library.Interceptor;
 
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.HandlerInterceptor;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+// import jakarta.servlet.http.HttpServletRequest;
+// import jakarta.servlet.http.HttpServletResponse;
+// import org.springframework.web.servlet.HandlerInterceptor;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
-public class LoginCheckInterceptor implements HandlerInterceptor {
-
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
-            throws Exception {
-        HttpSession session = request.getSession();
-        if (session.getAttribute("user_info") == null) {
-            response.sendRedirect("/login");
-            return false;
-        }
-        return true;
-    }
-
-
-}
+// public class LoginCheckInterceptor implements HandlerInterceptor {
+//     @Override
+//     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+//         // 세션에서 사용자 정보를 확인합니다.
+//         Object user = request.getSession().getAttribute("user");
+        
+//         if (user == null) {
+//             // 사용자가 로그인하지 않은 경우 로그인 페이지로 리다이렉트합니다.
+//             response.sendRedirect("/login");
+//             return false;
+//         }
+        
+//         return true;
+//     }
+// }
