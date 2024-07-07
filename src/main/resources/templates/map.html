@@ -11,12 +11,22 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/common.css">
   <style>
-    body {
-      font-family: 'Arial', sans-serif;
+    @font-face {
+      font-family: 'ONE-Mobile-POP';
+      src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/ONE-Mobile-POP.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
     }
 
-    a {
-      text-decoration: none;
+    @font-face {
+      font-family: 'HancomMalangMalang-Regular';
+      src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2406-1@1.0/HancomMalangMalang-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    body {
+      font-family: 'ONE-Mobile-POP', sans-serif;
     }
 
     /* 지도 컨테이너 여백 */
@@ -25,7 +35,8 @@
       height: calc(100vh - 250px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
       border-radius: 10px;
-      overflow: hidden; /* 넘치는 부분 숨김 */
+      overflow: hidden;
+      /* 넘치는 부분 숨김 */
       position: relative;
     }
 
@@ -63,18 +74,24 @@
 
     /* 검색 입력 필드 및 버튼 스타일 */
     .input-group {
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
-      border-radius: 5px; /* 모서리 둥글게 */
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      /* 그림자 추가 */
+      border-radius: 5px;
+      /* 모서리 둥글게 */
     }
 
     .input-group .form-control {
-      border-right: none; /* 오른쪽 경계선 제거 */
-      border-radius: 5px 0 0 5px; /* 모서리 둥글게 */
+      border-right: none;
+      /* 오른쪽 경계선 제거 */
+      border-radius: 5px 0 0 5px;
+      /* 모서리 둥글게 */
     }
 
     .input-group .btn {
-      border-left: none; /* 왼쪽 경계선 제거 */
-      border-radius: 0 5px 5px 0; /* 모서리 둥글게 */
+      border-left: none;
+      /* 왼쪽 경계선 제거 */
+      border-radius: 0 5px 5px 0;
+      /* 모서리 둥글게 */
     }
 
     /* 현재 위치 버튼 */
@@ -102,7 +119,8 @@
     .btn-custom:hover {
       background-color: #0056b3;
       transform: translateY(-2px);
-      opacity: 1; /* 호버 시 투명도 제거 */
+      opacity: 1;
+      /* 호버 시 투명도 제거 */
     }
 
     .btn-custom:active {
@@ -113,7 +131,6 @@
     /* 스타일 텍스트 */
     .styled-text {
       text-align: center;
-      font-family: 'Arial', sans-serif;
       font-size: 24px;
       font-weight: bold;
       color: #333;
@@ -279,8 +296,8 @@
         window.onload = function () {
           loadKakaoMapsScript(); // 기존의 카카오맵 스크립트 로드 함수 호출
 
-        // 로그아웃 텍스트를 로그인으로 변경
-        var authLink = document.getElementById('authLink');
+          // 로그아웃 텍스트를 로그인으로 변경
+          var authLink = document.getElementById('authLink');
           if (authLink) {
             if (!isLoggedIn) {
               authLink.innerText = '로그인';
@@ -590,7 +607,7 @@
         <p><a href="#" onclick="findDirections(${library.lat}, ${library.lng}, '${library.name}')"><i class="fas fa-directions"></i> 길찾기</a></p>
         <button onclick="showSearchArea()" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> 검색으로 돌아가기</button>
       `;
-        }    
+        }
 
         // 길찾기 기능
         function findDirections(lat, lng, libraryName) {
