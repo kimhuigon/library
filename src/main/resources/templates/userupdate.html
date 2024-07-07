@@ -7,6 +7,60 @@
   <title>회원정보수정</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/css/common.css">
+  <style>
+    .logo>img {
+      width: 200px;
+      display: flex;
+    }
+
+    .row {
+      display: flex;
+      justify-content: center;
+      height: 100%;
+      width: 100%;
+    }
+
+    .uupdata {
+      border: 5px solid #ffd9e5;
+      padding: 15px;
+      width: 30%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .uupdata>p {
+      margin: 0;
+      display: flex;
+      flex: 1;
+      align-items: center;
+      font-size: 20px;
+    }
+
+    .updata {
+      margin: 0;
+      display: flex;
+      flex: 1;
+      align-items: center;
+      font-size: 18px;
+    }
+
+    .btn {
+      flex: 1;
+    }
+
+    .btn>button {
+      border-radius: 5px;
+      border: 5px solid #ffd9e5;
+      box-sizing: border-box;
+      background-color: snow;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #ffd9e5;
+    }
+  </style>
 </head>
 
 <body>
@@ -33,30 +87,26 @@
           <p th:unless="${session.user_info == null}">
             <a th:href="@{/mypage}">[[ ${session.user_info.name} + '님 반갑습니다' ]]</a>
           </p>
-          <p>
-            <a th:href="@{/}">돌아가기</a>
-          </p>
         </div>
       </nav>
     </div>
-    <div>
-      <div class="container mt-5">
-        <div class="row">
-          <form method="post" th:action="@{|/userupdate/${userId}|}">
-            <div>
-              <label for="name">이름</label>
-              <input type="text" id="name" name="name" th:value="${user.name}">
-            </div>
-            <div>
-              <label for="email">이메일</label>
-              <input type="email" id="email" name="email" th:value="${user.email}">
-            </div>
-            <div class="d-grid gap-2">
-              <button id="complete">수정완료</button>
-            </div>
-          </form>
+    <div class="row">
+      <form method="post" th:action="@{|/userupdate/${userId}|}" class="uupdata">
+        <div class="logo"><img src="/image/logo.png" alt="logo"></div>
+        <p th:unless="${session.user_info == null}">[[ '사용중인 아이디: ' + ${session.user_info.userId} ]]</p>
+        <div class="updata">
+          <label for="name">이름 :&nbsp;&nbsp;</label>
+          <input type="text" id="name" name="name" th:value="${user.name}">
         </div>
-      </div>
+        <div class="updata">
+          <label for="email">이메일 :&nbsp;&nbsp;</label>
+          <input type="email" id="email" name="email" th:value="${user.email}">
+        </div>
+        <div class="btn">
+          <button id="complete">수정완료</button>
+          <button button type="button" onclick="location='/mypage'">취소</button>
+        </div>
+      </form>
     </div>
 
 </body>
