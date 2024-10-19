@@ -8,7 +8,7 @@
 
 ## ⛏️개발도구
 
-**Spring Boot | SQLite | KAKAO MAP**
+**<img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"> ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white) KAKAO MAP**
 <br/><br/><br/>
 
 ## 🔍주요기능
