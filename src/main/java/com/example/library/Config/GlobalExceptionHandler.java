@@ -1,4 +1,4 @@
-package com.example.library.Config;
+package com.example.library.config;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
