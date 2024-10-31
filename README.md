@@ -1,10 +1,13 @@
 # 여기 도서관 어때?
 
+![image](https://github.com/user-attachments/assets/60c63445-252d-43b6-9f11-b29d98f11678)
+<div align="center">
 도서관에서 다양한 문화생활을 즐기고 휴식을 취할 수 있도록 저희는 사용자에게 도서관을 편리하게 이용 할 수 있는<br/>
-서비스를 제공하는 것을 목표로 기획하게 되었습니다.<br/>
+서비스를 제공하는 것을 목표로 기획하게 되었습니다.<br/><br/>
 
 <img src="https://img.shields.io/badge/프로젝트 기간-2024.07.01~2022.07.05-green?style=flat&logo=&logoColor=white" />
-<br/><br/><br/>
+</div>
+<br/>
 
 ## 👨‍💻개발환경
 
