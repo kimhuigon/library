@@ -5,7 +5,7 @@
 도서관에서 다양한 문화생활을 즐기고 휴식을 취할 수 있도록 저희는 사용자에게 도서관을 편리하게 이용 할 수 있는<br/>
 서비스를 제공하는 것을 목표로 기획하게 되었습니다.<br/><br/>
 
-<img src="https://img.shields.io/badge/프로젝트 기간-2024.07.01~2022.07.05-green?style=flat&logo=&logoColor=white" />
+<img src="https://img.shields.io/badge/프로젝트 기간-2024.07.01~2024.07.05-green?style=flat&logo=&logoColor=white" />
 </div>
 <br/>
 
@@ -68,7 +68,7 @@
 ---
 
 ## 💁‍♂️프로젝트 팀원
-|Backend|Full-Stack|Full-Stack|
+|Full-Stack|Full-Stack|Full-Stack|
 |----------------|-------------------|-------------------|
 |![169955958](https://github.com/user-attachments/assets/d76d0369-1cea-4a8b-9295-c31284d8bc4a)|![6904857](https://github.com/user-attachments/assets/54bb40bc-035c-4726-869f-231acd0decaf)|![170331478](https://github.com/user-attachments/assets/6a067415-3b5c-4422-9f86-b82595be044d)|
 |[구본환](https://github.com/Falin4789)|[김희곤](https://github.com/kimhuigon)(팀장)|[채상희](https://github.com/ChaeSangHee)|
