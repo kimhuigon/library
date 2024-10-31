@@ -6,9 +6,17 @@
 <img src="https://img.shields.io/badge/프로젝트 기간-2024.07.01~2022.07.05-green?style=flat&logo=&logoColor=white" />
 <br/><br/><br/>
 
-## ⛏️개발도구
+## 👨‍💻개발환경
 
-**<img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"> ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white) <img src="https://img.shields.io/badge/kakaomap-E8C324?style=for-the-badge&logo=kakaomap&logoColor=white">**
+## Front-end
+<img src="https://img.shields.io/badge/kakaomap-E8C324?style=for-the-badge&logo=kakaomap&logoColor=white">
+
+## Back-end
+<img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"> ![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=for-the-badge&logo=sqlite&logoColor=white) 
+
+## Tools
+
+[![My Skills](https://skillicons.dev/icons?i=github&theme=light)](https://skillicons.dev)
 <br/><br/><br/>
 
 ## 🔍주요기능
@@ -53,3 +61,12 @@
 |길찾기|카카오맵연동|
 |------|-------------|
 |![image](https://github.com/user-attachments/assets/6fcc9181-47f9-4a43-a55b-e8147a770541)|![image](https://github.com/user-attachments/assets/3cd0bb0e-2807-4c06-b1e1-2b5ed9cae19d)|
+
+---
+
+## 💁‍♂️프로젝트 팀원
+|Backend|Full-Stack|Full-Stack|
+|----------------|-------------------|-------------------|
+|![169955958](https://github.com/user-attachments/assets/d76d0369-1cea-4a8b-9295-c31284d8bc4a)|![6904857](https://github.com/user-attachments/assets/54bb40bc-035c-4726-869f-231acd0decaf)|![170331478](https://github.com/user-attachments/assets/6a067415-3b5c-4422-9f86-b82595be044d)|
+|[구본환](https://github.com/Falin4789)|[김희곤](https://github.com/kimhuigon)(팀장)|[채상희](https://github.com/ChaeSangHee)|
+
